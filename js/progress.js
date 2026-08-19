@@ -316,6 +316,7 @@ function displayOrder(
   const productPrice = Number(order.productPrice || order.price || 0);
   const shippingFee = Number(order.shippingFee || 0);
   const totalPrice = Number(order.totalPrice || (productPrice + shippingFee));
+  const shippingRegion = order.shippingRegion || "Standard";
 
   const formattedTotal = `Rp ${totalPrice.toLocaleString("id-ID")}`;
   const formattedSubtotal = `Rp ${productPrice.toLocaleString("id-ID")}`;
