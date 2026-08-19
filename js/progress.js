@@ -302,9 +302,22 @@ async function searchOrder() {
 
 function displayOrder(
   order,
-  orderId
+  orderId,
+  productsMap = {}
 ) {
 
+
+  /* =================================================
+     PRICE FORMATTING
+  ================================================= */
+
+  const productPrice = Number(order.productPrice || order.price || 0);
+  const shippingFee = Number(order.shippingFee || 0);
+  const totalPrice = Number(order.totalPrice || (productPrice + shippingFee));
+
+  const formattedTotal = `Rp ${totalPrice.toLocaleString("id-ID")}`;
+  const formattedSubtotal = `Rp ${productPrice.toLocaleString("id-ID")}`;
+  const formattedShipping = `Rp ${shippingFee.toLocaleString("id-ID")}`;
 
   /* =================================================
      STATUS
