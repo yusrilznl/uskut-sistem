@@ -1442,13 +1442,13 @@ async function loadStoreSettingsAdmin() {
       if (preorderTargetDateInput && data.preorderTargetDate) {
         preorderTargetDateInput.value = data.preorderTargetDate;
       }
-      if (bankBcaInput) bankBcaInput.value = data.bankBca || "1234567890 a.n. USKUTLAB";
-      if (bankMandiriInput) bankMandiriInput.value = data.bankMandiri || "0987654321 a.n. USKUTLAB";
+      if (bankBcaInput) bankBcaInput.value = data.bankBca || "1234567890 a.n. USKUT";
+      if (bankMandiriInput) bankMandiriInput.value = data.bankMandiri || "0987654321 a.n. USKUT";
     } else {
       if (adminWaPhoneInput) adminWaPhoneInput.value = "6281234567890";
       if (preorderTargetDateInput) preorderTargetDateInput.value = "2026-12-30T23:59";
-      if (bankBcaInput) bankBcaInput.value = "1234567890 a.n. USKUTLAB";
-      if (bankMandiriInput) bankMandiriInput.value = "0987654321 a.n. USKUTLAB";
+      if (bankBcaInput) bankBcaInput.value = "1234567890 a.n. USKUT";
+      if (bankMandiriInput) bankMandiriInput.value = "0987654321 a.n. USKUT";
     }
   } catch (err) {
     console.error("Gagal memuat pengaturan toko:", err);

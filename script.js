@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
     adminWaPhone: "6281234567890",
     preorderTargetDate: "Dec 30, 2026 23:59:59",
     bankAccounts: [
-      { bank: "Bank BCA", number: "1234567890", holder: "USKUTLAB" },
-      { bank: "Bank Mandiri", number: "0987654321", holder: "USKUTLAB" }
+      { bank: "Bank BCA", number: "1234567890", holder: "USKUT" },
+      { bank: "Bank Mandiri", number: "0987654321", holder: "USKUT" }
     ]
   };
 
@@ -1264,7 +1264,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // WhatsApp Admin Redirect
       const adminWaPhone = ADMIN_CONFIG.adminWaPhone || "6281234567890";
       const waMessage = encodeURIComponent(
-        `Halo Admin USKUTLAB, saya baru saja melakukan Pemesanan & Upload Bukti Transfer:\n\n` +
+        `Halo Admin USKUT, saya baru saja melakukan Pemesanan & Upload Bukti Transfer:\n\n` +
         `📦 Produk: ${selectedProduct}\n` +
         `📏 Size: ${selectedSize}\n` +
         `🔢 Jumlah: ${quantity} pcs (Subtotal: Rp ${subtotal.toLocaleString("id-ID")})\n` +
