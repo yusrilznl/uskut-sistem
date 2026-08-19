@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Admin Dashboard - uskutlab</title>
+
+
+  <!-- =====================================================
+       GOOGLE FONT
+  ====================================================== -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+
+  <!-- =====================================================
+       BOXICONS
+  ====================================================== -->
+
+  <link
+    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    rel="stylesheet"
+  >
+
+
+  <!-- =====================================================
+       CSS
+  ====================================================== -->
+
+  <link
+    rel="stylesheet"
+    href="../style.css?v=2"
+  >
+
+
+  <!-- =====================================================
+       DASHBOARD STYLE
+  ====================================================== -->
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    body {
+
+      margin: 0;
+
+      font-family: "Inter", sans-serif;
+
+      background: #f5f5f3;
+
+      color: #111;
+
+    }
+
+
+    /* =====================================================
+       ADMIN LAYOUT
+    ====================================================== */
+
+    .admin-layout {
+
+      min-height: 100vh;
+
+      display: flex;
+
+    }
+
+
+    /* =====================================================
+       SIDEBAR
+    ====================================================== */
+
+    .admin-sidebar {
+
+      width: 250px;
+
+      background: #111;
+
+      color: #fff;
+
+      padding: 30px 20px;
+
+      position: fixed;
+
+      top: 0;
+      left: 0;
+      bottom: 0;
+
+      display: flex;
+
+      flex-direction: column;
+
+      z-index: 1000;
+
+      overflow-y: auto;
+
+    }
+
+
+    .admin-logo {
+
+      margin-bottom: 45px;
+
+      padding-left: 10px;
+
+    }
+
+
+    .admin-logo h2 {
+
+      margin: 0;
+
+      font-size: 24px;
+
+      letter-spacing: 3px;
+
+    }
+
+
+    .admin-logo span {
+
+      display: block;
+
+      margin-top: 5px;
+
+      color: #999;
+
+      font-size: 11px;
+
+      letter-spacing: 2px;
+
+    }
+
+
+    /* =====================================================
+       SIDEBAR MENU
+    ====================================================== */
+
+    .admin-menu {
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 8px;
+
+    }
+
+
+    .admin-menu a {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 14px;
+
+      padding: 14px 18px;
+
+      border-radius: 14px;
+
+      color: #dddddd;
+
+      background: rgba(255, 255, 255, 0.08);
+
+      border: 1px solid rgba(255, 255, 255, 0.12);
+
+      text-decoration: none;
+
+      font-size: 14px;
+
+      font-weight: 500;
+
+      transition: all 0.25s ease;
+
+    }
+
+
+    .admin-menu a i {
+
+      font-size: 22px;
+
+      color: #ffffff;
+
+    }
+
+
+    .admin-menu a:hover {
+
+      background: rgba(255, 255, 255, 0.2);
+
+      color: #ffffff;
+
+      transform: translateX(4px);
+
+    }
+
+
+    .admin-menu a.active {
+
+      background: #ffffff;
+
+      color: #111111;
+
+      font-weight: 700;
+
+      border-color: #ffffff;
+
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+
+    }
+
+
+    .admin-menu a.active i,
+    .admin-menu a.active span {
+
+      color: #111111 !important;
+
+    }
+
+
+    /* =====================================================
+       LOGOUT
+    ====================================================== */
+
+    .admin-logout {
+
+      margin-top: auto;
+
+    }
+
+
+    .admin-logout button {
+
+      width: 100%;
+
+      border: none;
+
+      background: #222;
+
+      color: #fff;
+
+      padding: 13px 15px;
+
+      border-radius: 12px;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 14px;
+
+      cursor: pointer;
+
+      font-family: inherit;
+
+      font-size: 14px;
+
+      transition: 0.25s;
+
+    }
+
+
+    .admin-logout button:hover {
+
+      background: #333;
+
+    }
+
+
+    /* =====================================================
+       MAIN
+    ====================================================== */
+
+    .admin-main {
+
+      margin-left: 250px;
+
+      width: calc(100% - 250px);
+
+      min-height: 100vh;
+
+      padding: 40px;
+
+      overflow-y: auto;
+
+      box-sizing: border-box;
+
+    }
+
+
+    /* =====================================================
+       HEADER
+    ====================================================== */
+
+    .admin-header {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 35px;
+
+    }
+
+
+    .admin-header-text p {
+
+      margin: 0 0 8px;
+
+      font-size: 11px;
+
+      letter-spacing: 3px;
+
+      color: #777;
+
+    }
+
+
+    .admin-header-text h1 {
+
+      margin: 0;
+
+      font-size: 32px;
+
+      font-weight: 600;
+
+    }
+
+
+    .admin-user {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      background: #fff;
+
+      padding: 10px 15px;
+
+      border-radius: 14px;
+
+      border: 1px solid #eee;
+
+    }
+
+
+    .admin-user-icon {
+
+      width: 38px;
+
+      height: 38px;
+
+      border-radius: 50%;
+
+      background: #111;
+
+      color: #fff;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+    }
+
+
+    .admin-user-info {
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 3px;
+
+    }
+
+
+    .admin-user-info small {
+
+      color: #888;
+
+      font-size: 10px;
+
+    }
+
+
+    .admin-user-info strong {
+
+      font-size: 13px;
+
+    }
+
+
+    /* =====================================================
+       STATISTICS
+    ====================================================== */
+
+    .admin-stats {
+
+      display: grid;
+
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+      gap: 18px;
+
+      margin-bottom: 30px;
+
+    }
+
+
+    .stat-card {
+
+      background: #fff;
+
+      border-radius: 20px;
+
+      padding: 24px;
+
+      border: 1px solid #eee;
+
+    }
+
+
+    .stat-top {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 20px;
+
+    }
+
+
+    .stat-top span {
+
+      font-size: 12px;
+
+      color: #777;
+
+    }
+
+
+    .stat-icon {
+
+      width: 42px;
+
+      height: 42px;
+
+      border-radius: 12px;
+
+      background: #f3f3f1;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 20px;
+
+    }
+
+
+    .stat-card h2 {
+
+      margin: 0;
+
+      font-size: 30px;
+
+      font-weight: 600;
+
+    }
+
+
+    .stat-card p {
+
+      margin: 6px 0 0;
+
+      color: #999;
+
+      font-size: 11px;
+
+    }
+
+
+    /* =====================================================
+       ORDER SECTION
+    ====================================================== */
+
+    .admin-section {
+
+      background: #fff;
+
+      border-radius: 22px;
+
+      border: 1px solid #eee;
+
+      padding: 28px;
+
+    }
+
+
+    .admin-section-header {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 25px;
+
+    }
+
+
+    .admin-section-header h2 {
+
+      margin: 0;
+
+      font-size: 20px;
+
+    }
+
+
+    .admin-section-header span {
+
+      color: #888;
+
+      font-size: 12px;
+
+    }
+
+
+    /* =====================================================
+       TABLE
+    ====================================================== */
+
+    .order-table-wrapper {
+
+      width: 100%;
+
+      overflow-x: auto;
+
+    }
+
+
+    .order-table {
+
+      width: 100%;
+
+      border-collapse: collapse;
+
+      min-width: 700px;
+
+    }
+
+
+    .order-table th {
+
+      text-align: left;
+
+      padding: 14px 12px;
+
+      border-bottom: 1px solid #eee;
+
+      color: #888;
+
+      font-size: 11px;
+
+      font-weight: 500;
+
+      text-transform: uppercase;
+
+      letter-spacing: 1px;
+
+    }
+
+
+    .order-table td {
+
+      padding: 17px 12px;
+
+      border-bottom: 1px solid #f0f0ee;
+
+      font-size: 13px;
+
+    }
+
+
+    .order-table tr:last-child td {
+
+      border-bottom: none;
+
+    }
+
+
+    .order-id {
+
+      font-weight: 600;
+
+    }
+
+
+    .order-product-name {
+
+      font-weight: 500;
+
+    }
+
+
+    .order-customer {
+
+      color: #555;
+
+    }
+
+
+    .order-price {
+
+      font-weight: 600;
+
+    }
+
+
+    /* =====================================================
+       STATUS
+    ====================================================== */
+
+    .status-badge {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      padding: 7px 11px;
+
+      border-radius: 20px;
+
+      font-size: 10px;
+
+      font-weight: 600;
+
+    }
+
+
+    .status-pending {
+
+      background: #fff4d6;
+
+      color: #9a7200;
+
+    }
+
+
+    .status-confirmed {
+
+      background: #e8f4ff;
+
+      color: #2875a8;
+
+    }
+
+
+    .status-processing {
+
+      background: #eee8ff;
+
+      color: #6d51a5;
+
+    }
+
+
+    .status-shipped {
+
+      background: #e6f7ed;
+
+      color: #27834d;
+
+    }
+
+
+    .status-completed {
+
+      background: #e5f5ed;
+
+      color: #187345;
+
+    }
+
+
+    /* =====================================================
+       EMPTY
+    ====================================================== */
+
+    .admin-empty {
+
+      padding: 60px 20px;
+
+      text-align: center;
+
+      color: #888;
+
+    }
+
+
+    .admin-empty i {
+
+      font-size: 45px;
+
+      margin-bottom: 15px;
+
+      color: #bbb;
+
+    }
+
+
+    .admin-empty h3 {
+
+      margin: 0 0 8px;
+
+      color: #555;
+
+      font-size: 16px;
+
+    }
+
+
+    .admin-empty p {
+
+      margin: 0;
+
+      font-size: 13px;
+
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ====================================================== */
+
+    @media (max-width: 1000px) {
+
+      .admin-stats {
+
+        grid-template-columns:
+          repeat(2, 1fr);
+
+      }
+
+    }
+
+
+    @media (max-width: 768px) {
+
+      .admin-sidebar {
+        width: 190px;
+        padding: 20px 12px;
+      }
+
+      .admin-logo {
+        margin-bottom: 30px;
+        padding-left: 5px;
+      }
+
+      .admin-logo h2 {
+        font-size: 18px;
+        letter-spacing: 1.5px;
+      }
+
+      .admin-logo span {
+        display: block;
+        font-size: 10px;
+      }
+
+      .admin-menu a {
+        padding: 11px 12px;
+        gap: 10px;
+        font-size: 13px;
+      }
+
+      .admin-menu a span {
+        display: inline-block !important;
+      }
+
+      .admin-logout button {
+        padding: 11px 12px;
+        gap: 10px;
+        font-size: 13px;
+      }
+
+      .admin-logout button span {
+        display: inline-block !important;
+      }
+
+      .admin-main {
+        margin-left: 190px;
+        width: calc(100% - 190px);
+        padding: 20px 14px;
+      }
+
+      .admin-header {
+        align-items: flex-start;
+        gap: 15px;
+        flex-direction: column;
+      }
+
+      .admin-header-text h1 {
+        font-size: 24px;
+      }
+
+      .admin-user {
+        width: 100%;
+      }
+
+    }
+
+
+    @media (max-width: 500px) {
+
+      .admin-stats {
+
+        grid-template-columns: 1fr;
+
+      }
+
+
+      .admin-section {
+
+        padding: 20px 15px;
+
+      }
+
+    }
+
+    /* =====================================================
+       PRODUCT MANAGEMENT STYLES
+    ====================================================== */
+    .btn-primary-admin {
+      background: #111;
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+
+    .btn-primary-admin:hover {
+      background: #333;
+    }
+
+    .btn-danger-admin {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .btn-danger-admin:hover {
+      background: #bd2130;
+    }
+
+    .btn-edit-admin {
+      background: #0d6efd;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .btn-edit-admin:hover {
+      background: #0b5ed7;
+    }
+
+    .admin-product-thumb {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    /* IMAGE UPLOADER */
+    .image-upload-wrapper {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .file-input-hidden {
+      display: none;
+    }
+
+    .upload-btn-label {
+      background: #eee;
+      color: #333;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: 0.2s;
+    }
+
+    .upload-btn-label:hover {
+      background: #ddd;
+    }
+
+    .preview-container {
+      margin-top: 8px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .preview-thumb {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    .remove-preview-btn {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ADMIN MODAL */
+    .admin-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 10000;
+      overflow-y: auto;
+    }
+
+    .admin-modal.show {
+      display: flex;
+    }
+
+    .admin-modal-content {
+      width: 100%;
+      max-width: 550px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+    }
+
+    .admin-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .admin-modal-header h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .admin-modal-close {
+      border: none;
+      background: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .admin-form-group {
+      margin-bottom: 16px;
+    }
+
+    .admin-form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .admin-form-group input,
+    .admin-form-group select,
+    .admin-form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .admin-form-group input:focus,
+    .admin-form-group select:focus,
+    .admin-form-group textarea:focus {
+      border-color: #111;
+    }
+
+    /* STATUS BADGES & ACTION BUTTONS */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .status-badge.pending {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+    .status-badge.confirmed {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .status-badge.rejected {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .proof-thumb {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      transition: transform 0.2s;
+    }
+    .proof-thumb:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .btn-confirm-admin {
+      background: #198754;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+    .btn-confirm-admin:hover {
+      background: #157347;
+    }
+    .btn-reject-admin {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+    .btn-reject-admin:hover {
+      background: #bb2d3b;
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     ADMIN LAYOUT
+===================================================== -->
+
+<div class="admin-layout">
+
+
+  <!-- ===================================================
+       SIDEBAR
+  ==================================================== -->
+
+  <aside class="admin-sidebar">
+
+
+    <!-- LOGO -->
+
+    <div class="admin-logo">
+
+      <h2>USKUT</h2>
+
+      <span>ADMIN PANEL</span>
+
+    </div>
+
+
+    <!-- MENU -->
+
+    <nav class="admin-menu">
+
+
+      <a
+        href="#"
+        id="tabOrders"
+        class="active"
+      >
+
+        <i class="bx bx-package"></i>
+
+        <span>
+          Pesanan
+        </span>
+
+      </a>
+
+
+      <a href="#" id="tabProducts">
+
+        <i class="bx bx-t-shirt"></i>
+
+        <span>
+          Produk
+        </span>
+
+      </a>
+
+
+      <a href="#" id="tabShipping">
+
+        <i class="bx bx-truck"></i>
+
+        <span>
+          Pengaturan Ongkir
+        </span>
+
+      </a>
+
+
+      <a href="#" id="tabStoreSettings">
+
+        <i class="bx bx-slider-alt"></i>
+
+        <span>
+          Pengaturan Toko
+        </span>
+
+      </a>
+
+
+    </nav>
+
+
+    <!-- LOGOUT -->
+
+    <div class="admin-logout">
+
+      <button
+        type="button"
+        id="logoutBtn"
+      >
+
+        <i class="bx bx-log-out"></i>
+
+        <span>
+          Logout
+        </span>
+
+      </button>
+
+    </div>
+
+
+  </aside>
+
+
+
+  <!-- ===================================================
+       MAIN
+  ==================================================== -->
+
+  <main class="admin-main">
+
+
+    <!-- HEADER -->
+
+    <header class="admin-header">
+
+
+      <div class="admin-header-text">
+
+        <p>
+          USKUT ADMIN PANEL
+        </p>
+
+        <h1 id="pageTitle">
+          Dashboard Pesanan
+        </h1>
+
+      </div>
+
+
+      <div class="admin-user">
+
+        <div class="admin-user-icon">
+
+          <i class="bx bx-user"></i>
+
+        </div>
+
+
+        <div class="admin-user-info">
+
+          <small>
+            Logged in as
+          </small>
+
+          <strong id="adminEmail">
+            Admin
+          </strong>
+
+        </div>
+
+      </div>
+
+
+    </header>
+
+
+
+    <!-- =================================================
+         SECTION 1: ORDERS
+    ================================================== -->
+
+    <div id="sectionOrders">
+
+      <section class="admin-stats">
+
+
+        <!-- TOTAL -->
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+
+            <span>
+              Total Pesanan
+            </span>
+
+            <div class="stat-icon">
+
+              <i class="bx bx-receipt"></i>
+
+            </div>
+
+          </div>
+
+
+          <h2 id="totalOrders">
+            0
+          </h2>
+
+          <p>
+            Semua pesanan
+          </p>
+
+        </div>
+
+
+
+        <!-- PENDING -->
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+
+            <span>
+              Pending
+            </span>
+
+            <div class="stat-icon">
+
+              <i class="bx bx-time"></i>
+
+            </div>
+
+          </div>
+
+
+          <h2 id="pendingOrders">
+            0
+          </h2>
+
+          <p>
+            Menunggu konfirmasi
+          </p>
+
+        </div>
+
+
+
+        <!-- PROCESSING -->
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+
+            <span>
+              Produksi
+            </span>
+
+            <div class="stat-icon">
+
+              <i class="bx bx-loader-circle"></i>
+
+            </div>
+
+          </div>
+
+
+          <h2 id="processingOrders">
+            0
+          </h2>
+
+          <p>
+            Sedang diproduksi
+          </p>
+
+        </div>
+
+
+
+        <!-- COMPLETED -->
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+
+            <span>
+              Selesai
+            </span>
+
+            <div class="stat-icon">
+
+              <i class="bx bx-check-double"></i>
+
+            </div>
+
+          </div>
+
+
+          <h2 id="completedOrders">
+            0
+          </h2>
+
+          <p>
+            Pesanan selesai
+          </p>
+
+        </div>
+
+
+      </section>
+
+
+
+      <!-- =================================================
+           ORDER LIST
+      ================================================== -->
+
+      <section class="admin-section">
+
+
+        <div class="admin-section-header">
+
+          <div>
+
+            <h2>
+              Pesanan Terbaru
+            </h2>
+
+            <span>
+              Daftar pesanan dari pelanggan
+            </span>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- TABLE -->
+
+        <div class="order-table-wrapper">
+
+          <table class="order-table">
+
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Order ID
+                </th>
+
+                <th>
+                  Produk
+                </th>
+
+                <th>
+                  Pelanggan
+                </th>
+
+                <th>
+                  Size / Qty
+                </th>
+
+                <th>
+                  Ongkir
+                </th>
+
+                <th>
+                  Total Bayar
+                </th>
+
+                <th>
+                  Bukti Transfer
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th>
+                  Aksi
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody id="orderTableBody">
+
+              <!-- Data pesanan -->
+
+            </tbody>
+
+
+          </table>
+
+        </div>
+
+
+      </section>
+
+    </div>
+
+
+    <!-- =================================================
+         SECTION 2: PRODUCTS (MANAGE PRODUCTS)
+    ================================================== -->
+
+    <div id="sectionProducts" style="display: none;">
+
+      <section class="admin-section">
+
+        <div class="admin-section-header" style="display: flex; justify-content: space-between; align-items: center;">
+
+          <div>
+
+            <h2>
+              Kelola Produk
+            </h2>
+
+            <span>
+              Daftar produk koleksi USKUTLAB di Firestore
+            </span>
+
+          </div>
+
+          <button type="button" class="btn-primary-admin" id="addProductBtn">
+            <i class="bx bx-plus"></i> Tambah Produk Baru
+          </button>
+
+        </div>
+
+
+        <!-- PRODUCT TABLE -->
+
+        <div class="order-table-wrapper">
+
+          <table class="order-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Gambar</th>
+
+                <th>Nama Produk</th>
+
+                <th>Harga</th>
+
+                <th>Status</th>
+
+                <th>Aksi</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="productTableBody">
+
+              <!-- Data produk -->
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+    </div>
+
+    <!-- =================================================
+         SECTION 3: SHIPPING (MANAGE ONGKIR)
+    ================================================== -->
+
+    <div id="sectionShipping" style="display: none;">
+
+      <section class="admin-section">
+
+        <div class="admin-section-header" style="display: flex; justify-content: space-between; align-items: center;">
+
+          <div>
+
+            <h2>
+              Pengaturan Ongkir Wilayah
+            </h2>
+
+            <span>
+              Kelola daftar wilayah pengiriman dan tarif ongkos kirim (Rp)
+            </span>
+
+          </div>
+
+          <button type="button" class="btn-primary-admin" id="addShippingBtn">
+            <i class="bx bx-plus"></i> Tambah Wilayah Ongkir
+          </button>
+
+        </div>
+
+
+        <!-- SHIPPING TABLE -->
+
+        <div class="order-table-wrapper">
+
+          <table class="order-table">
+
+            <thead>
+
+              <tr>
+
+                <th>Nama Wilayah</th>
+
+                <th>Tarif Ongkir (Rp)</th>
+
+                <th>Estimasi Pengiriman</th>
+
+                <th>Aksi</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="shippingTableBody">
+
+              <!-- Data ongkir -->
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+    <!-- =================================================
+         SECTION 4: STORE SETTINGS (WA, COUNTDOWN, BANK)
+    ================================================== -->
+
+    <div id="sectionStoreSettings" style="display: none;">
+
+      <section class="admin-section" style="max-width: 750px;">
+
+        <div class="admin-section-header">
+
+          <div>
+
+            <h2>
+              Pengaturan Toko & Pre-Order
+            </h2>
+
+            <span>
+              Kelola timer countdown, nomor WhatsApp admin, dan rekening bank di satu tempat
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <form id="storeSettingsForm" style="margin-top: 25px;">
+
+          <!-- WA ADMIN -->
+          <div class="admin-form-group">
+
+            <label for="adminWaPhoneInput">
+              Nomor WhatsApp Admin (Format: 628...)
+            </label>
+
+            <input
+              type="text"
+              id="adminWaPhoneInput"
+              placeholder="Contoh: 6281234567890"
+              required
+            >
+
+            <small style="color: #777; font-size: 11px; display: block; margin-top: 5px;">
+              Nomor ini digunakan untuk menerima notifikasi konfirmasi pemesanan dari pembeli via WhatsApp.
+            </small>
+
+          </div>
+
+
+          <!-- COUNTDOWN TARGET -->
+          <div class="admin-form-group" style="margin-top: 20px;">
+
+            <label for="preorderTargetDateInput">
+              Tanggal & Waktu Berakhir Countdown Pre-Order
+            </label>
+
+            <input
+              type="datetime-local"
+              id="preorderTargetDateInput"
+              required
+            >
+
+            <small style="color: #777; font-size: 11px; display: block; margin-top: 5px;">
+              Pilih tanggal dan jam di mana timer countdown pre-order di halaman depan toko akan berakhir.
+            </small>
+
+          </div>
+
+
+          <!-- REKENING BCA -->
+          <div class="admin-form-group" style="margin-top: 20px;">
+
+            <label for="bankBcaInput">
+              Rekening Bank BCA
+            </label>
+
+            <input
+              type="text"
+              id="bankBcaInput"
+              placeholder="Nomor Rekening & Atas Nama (contoh: 1234567890 a.n. USKUTLAB)"
+              required
+            >
+
+          </div>
+
+
+          <!-- REKENING MANDIRI -->
+          <div class="admin-form-group" style="margin-top: 20px;">
+
+            <label for="bankMandiriInput">
+              Rekening Bank Mandiri
+            </label>
+
+            <input
+              type="text"
+              id="bankMandiriInput"
+              placeholder="Nomor Rekening & Atas Nama (contoh: 0987654321 a.n. USKUTLAB)"
+              required
+            >
+
+          </div>
+
+
+          <div style="margin-top: 30px;">
+
+            <button
+              type="submit"
+              class="btn-primary-admin"
+              id="saveStoreSettingsBtn"
+              style="padding: 12px 26px; font-size: 14px;"
+            >
+              <i class="bx bx-save"></i> Simpan Pengaturan Toko
+            </button>
+
+          </div>
+
+        </form>
+
+      </section>
+
+    </div>
+
+
+  </main>
+
+
+</div>
+
+
+<!-- =====================================================
+     PRODUCT MODAL (ADD / EDIT)
+===================================================== -->
+
+<div class="admin-modal" id="productAdminModal">
+
+  <div class="admin-modal-content">
+
+    <div class="admin-modal-header">
+
+      <h3 id="productModalTitle">Tambah Produk Baru</h3>
+
+      <button type="button" class="admin-modal-close" id="closeProductModalBtn">&times;</button>
+
+    </div>
+
+
+    <form id="productForm">
+
+      <input type="hidden" id="adminProductId">
+
+
+      <div class="admin-form-group">
+
+        <label for="adminProductName">Nama Produk</label>
+
+        <input type="text" id="adminProductName" placeholder="Contoh: Long Sleeve White" required>
+
+      </div>
+
+
+      <div class="admin-form-group">
+
+        <label for="adminProductPrice">Harga (Rp)</label>
+
+        <input type="number" id="adminProductPrice" placeholder="150000" required>
+
+      </div>
+
+
+      <div class="admin-form-group">
+
+        <label for="adminProductStatus">Status Pre-Order</label>
+
+        <select id="adminProductStatus">
+
+          <option value="open">OPEN PRE-ORDER</option>
+
+          <option value="closed">CLOSED</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="admin-form-group">
+
+        <label for="adminProductDesc">Deskripsi Produk</label>
+
+        <textarea id="adminProductDesc" rows="3" placeholder="Deskripsi singkat produk..."></textarea>
+
+      </div>
+
+
+      <!-- GAMBAR 1 -->
+      <div class="admin-form-group">
+        <label>Foto Produk 1 (Utama)</label>
+        <div class="image-upload-wrapper">
+          <input type="file" id="fileImage1" accept="image/*" class="file-input-hidden">
+          <label for="fileImage1" class="upload-btn-label">
+            <i class="bx bx-image-add"></i> Pilih dari Galeri
+          </label>
+          <input type="text" id="adminProductImage1" placeholder="atau nama/URL file..." required style="flex:1;">
+        </div>
+        <div class="preview-container" id="previewBox1" style="display:none;">
+          <img id="previewImg1" class="preview-thumb" src="" alt="Preview 1">
+          <button type="button" class="remove-preview-btn" id="removeImg1Btn" title="Hapus foto">&times;</button>
+        </div>
+      </div>
+
+      <!-- GAMBAR 2 -->
+      <div class="admin-form-group">
+        <label>Foto Produk 2</label>
+        <div class="image-upload-wrapper">
+          <input type="file" id="fileImage2" accept="image/*" class="file-input-hidden">
+          <label for="fileImage2" class="upload-btn-label">
+            <i class="bx bx-image-add"></i> Pilih dari Galeri
+          </label>
+          <input type="text" id="adminProductImage2" placeholder="atau nama/URL file..." style="flex:1;">
+        </div>
+        <div class="preview-container" id="previewBox2" style="display:none;">
+          <img id="previewImg2" class="preview-thumb" src="" alt="Preview 2">
+          <button type="button" class="remove-preview-btn" id="removeImg2Btn" title="Hapus foto">&times;</button>
+        </div>
+      </div>
+
+      <!-- GAMBAR 3 -->
+      <div class="admin-form-group">
+        <label>Foto Produk 3</label>
+        <div class="image-upload-wrapper">
+          <input type="file" id="fileImage3" accept="image/*" class="file-input-hidden">
+          <label for="fileImage3" class="upload-btn-label">
+            <i class="bx bx-image-add"></i> Pilih dari Galeri
+          </label>
+          <input type="text" id="adminProductImage3" placeholder="atau nama/URL file..." style="flex:1;">
+        </div>
+        <div class="preview-container" id="previewBox3" style="display:none;">
+          <img id="previewImg3" class="preview-thumb" src="" alt="Preview 3">
+          <button type="button" class="remove-preview-btn" id="removeImg3Btn" title="Hapus foto">&times;</button>
+        </div>
+      </div>
+
+
+      <button type="submit" class="btn-primary-admin" style="width: 100%; justify-content: center; margin-top: 10px;" id="saveProductSubmitBtn">
+
+        Simpan Produk
+
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SHIPPING MODAL (ADD / EDIT)
+===================================================== -->
+
+<div class="admin-modal" id="shippingAdminModal">
+
+  <div class="admin-modal-content" style="max-width: 480px;">
+
+    <div class="admin-modal-header">
+
+      <h3 id="shippingModalTitle">Tambah Wilayah Ongkir</h3>
+
+      <button type="button" class="admin-modal-close" id="closeShippingModalBtn">&times;</button>
+
+    </div>
+
+
+    <form id="shippingForm">
+
+      <input type="hidden" id="adminShippingId">
+
+
+      <div class="admin-form-group">
+
+        <label for="adminShippingRegion">Nama Wilayah</label>
+
+        <input type="text" id="adminShippingRegion" placeholder="Contoh: Jabodetabek" required>
+
+      </div>
+
+
+      <div class="admin-form-group">
+
+        <label for="adminShippingFee">Tarif Ongkir (Rp)</label>
+
+        <input type="number" id="adminShippingFee" placeholder="10000" required>
+
+      </div>
+
+
+      <div class="admin-form-group">
+
+        <label for="adminShippingEstimate">Estimasi Pengiriman (Opsional)</label>
+
+        <input type="text" id="adminShippingEstimate" placeholder="Contoh: 1-2 Hari Kerja">
+
+      </div>
+
+
+      <button type="submit" class="btn-primary-admin" style="width: 100%; justify-content: center; margin-top: 10px;" id="saveShippingSubmitBtn">
+
+        Simpan Tarif Ongkir
+
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     PAYMENT PROOF MODAL (ZOOM VIEW)
+===================================================== -->
+
+<div class="admin-modal" id="paymentProofModal">
+
+  <div class="admin-modal-content" style="max-width: 550px; text-align: center;">
+
+    <div class="admin-modal-header">
+
+      <h3>Bukti Transfer Pembayaran</h3>
+
+      <button type="button" class="admin-modal-close" id="closeProofModalBtn">&times;</button>
+
+    </div>
+
+
+    <div style="padding: 10px 0;">
+
+      <img id="proofModalImg" src="" alt="Bukti Transfer" style="width: 100%; max-height: 65vh; object-fit: contain; border-radius: 12px; border: 1px solid #eee;">
+
+      <div id="proofModalActions" style="margin-top: 20px; display: flex; justify-content: center; gap: 12px;"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script
+  type="module"
+  src="dashboard.js?v=9"
+></script>
+
+
+</body>
+
+</html>

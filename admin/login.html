@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Admin Login - USKUT</title>
+
+  <!-- GOOGLE FONT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- BOXICONS -->
+  <link
+    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    rel="stylesheet"
+  >
+
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+
+    body {
+
+      min-height: 100vh;
+
+      font-family: "Inter", sans-serif;
+
+      background: #111;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 40px 20px;
+
+      overflow-y: auto;
+
+    }
+
+
+    .login-container {
+
+      width: 100%;
+
+      max-width: 420px;
+
+      max-height: 90vh;
+
+      overflow-y: auto;
+
+      background: #fff;
+
+      border-radius: 24px;
+
+      padding: 45px 40px;
+
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35);
+
+    }
+
+
+    /* LOGO */
+
+    .login-logo {
+
+      text-align: center;
+
+      margin-bottom: 35px;
+
+    }
+
+
+    .login-logo img {
+
+      width: 100px;
+
+      height: auto;
+
+      object-fit: contain;
+
+    }
+
+
+    .login-logo p {
+
+      margin-top: 15px;
+
+      font-size: 11px;
+
+      letter-spacing: 4px;
+
+      color: #777;
+
+      text-transform: uppercase;
+
+    }
+
+
+    /* TITLE */
+
+    .login-header {
+
+      margin-bottom: 30px;
+
+    }
+
+
+    .login-header h1 {
+
+      font-size: 28px;
+
+      color: #111;
+
+      margin-bottom: 8px;
+
+    }
+
+
+    .login-header p {
+
+      color: #777;
+
+      font-size: 14px;
+
+      line-height: 1.6;
+
+    }
+
+
+    /* FIELD */
+
+    .form-group {
+
+      margin-bottom: 20px;
+
+    }
+
+
+    .form-group label {
+
+      display: block;
+
+      margin-bottom: 8px;
+
+      font-size: 13px;
+
+      font-weight: 600;
+
+      color: #222;
+
+    }
+
+
+    .input-wrapper {
+
+      position: relative;
+
+    }
+
+
+    .input-wrapper i {
+
+      position: absolute;
+
+      left: 15px;
+
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      font-size: 20px;
+
+      color: #888;
+
+    }
+
+
+    .input-wrapper input {
+
+      width: 100%;
+
+      height: 52px;
+
+      padding: 0 15px 0 45px;
+
+      border: 1px solid #ddd;
+
+      border-radius: 14px;
+
+      outline: none;
+
+      font-family: inherit;
+
+      font-size: 14px;
+
+      transition: 0.2s;
+
+    }
+
+
+    .input-wrapper input:focus {
+
+      border-color: #111;
+
+    }
+
+
+    /* LOGIN BUTTON */
+
+    .login-btn {
+
+      width: 100%;
+
+      height: 52px;
+
+      border: none;
+
+      border-radius: 14px;
+
+      background: #111;
+
+      color: #fff;
+
+      font-family: inherit;
+
+      font-size: 14px;
+
+      font-weight: 600;
+
+      cursor: pointer;
+
+      transition: 0.3s;
+
+      margin-top: 5px;
+
+    }
+
+
+    .login-btn:hover {
+
+      opacity: 0.85;
+
+    }
+
+
+    .login-btn:disabled {
+
+      opacity: 0.5;
+
+      cursor: not-allowed;
+
+    }
+
+
+    /* ERROR */
+
+    .login-error {
+
+      display: none;
+
+      margin-bottom: 20px;
+
+      padding: 13px 15px;
+
+      border-radius: 12px;
+
+      background: #fff0f0;
+
+      color: #c62828;
+
+      font-size: 13px;
+
+      line-height: 1.5;
+
+    }
+
+
+    .login-error.show {
+
+      display: block;
+
+    }
+
+
+    /* FOOTER */
+
+    .login-footer {
+
+      text-align: center;
+
+      margin-top: 30px;
+
+      padding-top: 20px;
+
+      border-top: 1px solid #eee;
+
+    }
+
+
+    .login-footer span {
+
+      color: #999;
+
+      font-size: 12px;
+
+    }
+
+
+    /* MOBILE */
+
+    @media (max-width: 480px) {
+
+      .login-container {
+
+        padding: 35px 25px;
+
+        border-radius: 20px;
+
+      }
+
+      .login-header h1 {
+
+        font-size: 24px;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <main class="login-container">
+
+
+    <!-- LOGO -->
+
+    <div class="login-logo">
+
+      <img
+        src="../logo.PNG"
+        alt="USKUT Logo"
+      >
+
+      <p>
+        Admin Panel
+      </p>
+
+    </div>
+
+
+    <!-- HEADER -->
+
+    <div class="login-header">
+
+      <h1>
+        Selamat Datang
+      </h1>
+
+      <p>
+        Login untuk mengelola pesanan
+        dan produk USKUT.
+      </p>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      class="login-error"
+      id="loginError"
+    ></div>
+
+
+    <!-- FORM BOX -->
+
+    <div id="loginForm">
+
+
+      <!-- EMAIL -->
+
+      <div class="form-group">
+
+        <label for="email">
+          Email Admin
+        </label>
+
+        <div class="input-wrapper">
+
+          <i class="bx bx-envelope"></i>
+
+          <input
+            type="email"
+            id="email"
+            placeholder="admin@uskut.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- PASSWORD -->
+
+      <div class="form-group">
+
+        <label for="password">
+          Password
+        </label>
+
+        <div class="input-wrapper">
+
+          <i class="bx bx-lock-alt"></i>
+
+          <input
+            type="password"
+            id="password"
+            placeholder="Masukkan password"
+            autocomplete="current-password"
+            required
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- BUTTON -->
+
+      <button
+        type="button"
+        class="login-btn"
+        id="loginBtn"
+      >
+
+        Login Admin
+
+      </button>
+
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="login-footer">
+
+      <span>
+        © 2026 USKUT Admin Panel
+      </span>
+
+    </div>
+
+
+  </main>
+
+
+  <!-- FIREBASE LOGIN -->
+
+  <script
+    type="module"
+    src="login.js?v=2"
+  ></script>
+
+
+</body>
+
+</html>

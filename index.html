@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>uskutlab</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css?v=2">
+
+  <!-- GOOGLE FONT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- FEATHER ICON -->
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <!-- REMIX ICON -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+    rel="stylesheet"
+  >
+
+  <!-- BOXICONS -->
+  <link
+    href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    rel="stylesheet"
+  >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <img src="logo.PNG" alt="uskut Logo">
+  </div>
+
+
+  <!-- MENU -->
+  <div class="nav-menu">
+
+    <a href="index.html">Home</a>
+
+    <a href="drop.html">Drop</a>
+
+    <a href="how-it-works.html">How It Works</a>
+
+    <a href="progress.html">Progress</a>
+
+    <a href="faq.html">FAQ</a>
+
+    <a href="about.html">About</a>
+
+    <a href="contact.html">Contact</a>
+
+  </div>
+
+
+  <!-- HAMBURGER -->
+  <div class="hamburger-menu">
+
+    <a href="#" id="hamburger-menu">
+      <i class="bx bx-menu"></i>
+    </a>
+
+  </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero container">
+
+  <div class="hero-text">
+
+    <h1>
+      OPEN PRE-ORDER KOLEKSI TERBARU
+    </h1>
+
+    <p>
+      Lebih eksklusif, lebih terkontrol, dan berkualitas.
+    </p>
+
+    <a href="drop.html">
+      <button>
+        Lihat Koleksi PO
+      </button>
+    </a>
+
+  </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     COUNTDOWN
+===================================================== -->
+
+<section class="countdown-section">
+
+  <p class="countdown-label">
+    DROP ENDS IN
+  </p>
+
+
+  <div class="countdown-container">
+
+
+    <!-- DAYS -->
+    <div class="time-box">
+
+      <h2 id="days">
+        00
+      </h2>
+
+      <span>
+        Days
+      </span>
+
+    </div>
+
+
+    <!-- HOURS -->
+    <div class="time-box">
+
+      <h2 id="hours">
+        00
+      </h2>
+
+      <span>
+        Hours
+      </span>
+
+    </div>
+
+
+    <!-- MINUTES -->
+    <div class="time-box">
+
+      <h2 id="minutes">
+        00
+      </h2>
+
+      <span>
+        Minutes
+      </span>
+
+    </div>
+
+
+    <!-- SECONDS -->
+    <div class="time-box">
+
+      <h2 id="seconds">
+        00
+      </h2>
+
+      <span>
+        Seconds
+      </span>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PRODUCTS
+===================================================== -->
+
+<section class="products container">
+
+
+  <!-- SECTION TITLE -->
+  <div class="section-title">
+
+    <p>
+      OPEN PRE-ORDER
+    </p>
+
+    <h2>
+      Selected Collection
+    </h2>
+
+  </div>
+
+
+  <!-- PRODUCT GRID -->
+
+  <!--
+    Produk akan dimasukkan secara otomatis
+    oleh products.js dari Firestore.
+  -->
+
+  <div class="product-grid">
+
+    <!-- FIRESTORE PRODUCTS -->
+
+  </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     PRODUCT MODAL
+===================================================== -->
+
+<div
+  class="product-modal"
+  id="productModal"
+>
+
+
+  <div class="modal-content">
+
+
+    <!-- CLOSE BUTTON -->
+
+    <span class="close-modal">
+      &times;
+    </span>
+
+
+
+    <!-- =================================================
+         LEFT : PRODUCT IMAGE
+    ================================================== -->
+
+    <div class="modal-gallery">
+
+
+      <div class="modal-slider">
+
+
+        <!-- IMAGE TRACK -->
+
+        <div
+          class="modal-slider-images"
+          id="modalSliderImages"
+        >
+
+          <img
+            id="modalImage1"
+            src=""
+            alt="Product Image"
+          >
+
+          <img
+            id="modalImage2"
+            src=""
+            alt="Product Image"
+          >
+
+          <img
+            id="modalImage3"
+            src=""
+            alt="Product Image"
+          >
+
+        </div>
+
+
+
+        <!-- PREVIOUS -->
+
+        <button
+          class="modal-slider-btn modal-prev"
+          type="button"
+        >
+
+          <i class="bx bx-chevron-left"></i>
+
+        </button>
+
+
+
+        <!-- NEXT -->
+
+        <button
+          class="modal-slider-btn modal-next"
+          type="button"
+        >
+
+          <i class="bx bx-chevron-right"></i>
+
+        </button>
+
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         RIGHT : PRODUCT INFORMATION
+    ================================================== -->
+
+    <div class="modal-info">
+
+
+      <!-- STATUS -->
+
+      <p
+        class="badge"
+        id="modalStatus"
+      >
+        OPEN PRE-ORDER
+      </p>
+
+
+
+      <!-- PRODUCT NAME -->
+
+      <h2 id="modalTitle">
+      </h2>
+
+
+
+      <!-- PRICE -->
+
+      <p
+        class="modal-price"
+        id="modalPrice"
+      >
+      </p>
+
+
+
+      <!-- DESCRIPTION -->
+
+      <p
+        class="modal-desc"
+        id="modalDesc"
+      >
+      </p>
+
+
+
+      <!-- PRODUCT INFORMATION -->
+
+      <div class="modal-detail-box">
+
+        <p>
+          📦 Estimasi pengiriman 14–21 hari
+        </p>
+
+        <p>
+          🎯 Produksi terbatas
+        </p>
+
+      </div>
+
+
+
+      <!-- =================================================
+           SIZE
+      ================================================== -->
+
+      <div class="size-section">
+
+        <h4>
+          Select Size
+        </h4>
+
+
+        <div class="size-buttons">
+
+          <button
+            class="size-btn"
+            type="button"
+          >
+            S
+          </button>
+
+          <button
+            class="size-btn"
+            type="button"
+          >
+            M
+          </button>
+
+          <button
+            class="size-btn"
+            type="button"
+          >
+            L
+          </button>
+
+          <button
+            class="size-btn"
+            type="button"
+          >
+            XL
+          </button>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- =================================================
+           PRE-ORDER BUTTON
+      ================================================== -->
+
+      <button
+        class="preorder-btn"
+        id="preorderBtn"
+        type="button"
+      >
+
+        Pre-Order Sekarang
+
+      </button>
+
+
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+  <p>
+    © 2026 uskutlab • <a href="/admin/login.html">Admin Panel</a>
+  </p>
+
+</footer>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<!-- Main Script -->
+<script src="script.js?v=2"></script>
+
+
+<!-- Firebase + Products -->
+<script
+  type="module"
+  src="js/products.js?v=2"
+></script>
+
+
+<!-- FEATHER ICON INITIALIZATION -->
+
+<script>
+  feather.replace();
+</script>
+
+
+</body>
+
+</html>
