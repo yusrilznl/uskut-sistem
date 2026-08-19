@@ -241,7 +241,7 @@ async function searchOrder() {
       displayOrder(
         order,
         doc.id,
-        productsMap
+        globalProductsMap
       );
 
     });
