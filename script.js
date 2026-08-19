@@ -1217,6 +1217,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const docRef = await addDoc(collection(db, "orders"), {
         productName: selectedProduct,
         productPrice: selectedPrice,
+        productImage: (selectedImages && selectedImages[0]) ? selectedImages[0] : "",
         size: selectedSize,
         quantity: quantity,
         subtotal: subtotal,

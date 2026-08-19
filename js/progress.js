@@ -70,6 +70,21 @@ function normalizePhone(input) {
   return clean;
 }
 
+function getImagePath(image) {
+  if (!image || !image.trim()) return "";
+  const trimmed = image.trim();
+  if (
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("data:") ||
+    trimmed.startsWith("./") ||
+    trimmed.startsWith("/")
+  ) {
+    return trimmed;
+  }
+  return `./${trimmed}`;
+}
+
 /* =====================================================
    SEARCH ORDER
 ===================================================== */
@@ -324,9 +339,25 @@ function displayOrder(
   const card = document.createElement("div");
   card.className = "order-card";
 
+    const productImage = order.productImage || "";
+    let productIconHtml = `
+      <div class="order-product-icon" style="background:#111; color:#fff; display:flex; align-items:center; justify-content:center;">
+        <i class="bx bx-t-shirt" style="font-size:28px; color:#fff;"></i>
+      </div>
+    `;
+
+    if (productImage) {
+      const imgUrl = getImagePath(productImage);
+      productIconHtml = `
+        <div class="order-product-icon" style="overflow:hidden; border:1px solid #eee; display:flex; align-items:center; justify-content:center; background:#f8f8f8;">
+          <img src="${imgUrl}" alt="${escapeHTML(order.productName || 'Product')}" style="width:100%; height:100%; object-fit:cover; border-radius:16px;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'bx bx-t-shirt\' style=\'font-size:28px; color:#111;\'></i>';">
+        </div>
+      `;
+    }
+
   card.innerHTML = `
 
-    <!-- ORDER HEADER -->
+    <!-- CARD HEADER -->
 
     <div class="order-card-header">
 
@@ -360,11 +391,7 @@ function displayOrder(
 
     <div class="order-product">
 
-      <div class="order-product-icon">
-
-        <i class="bx bx-t-shirt"></i>
-
-      </div>
+      ${productIconHtml}
 
 
       <div class="order-product-info">
