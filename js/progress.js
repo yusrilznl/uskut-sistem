@@ -204,6 +204,22 @@ async function searchOrder() {
 
 
     /* =================================================
+       PETA PRODUK UNTUK COCOKKAN GAMBAR DARI FIRESTORE
+    ================================================= */
+    const productsMap = {};
+    try {
+      const productsSnap = await getDocs(collection(db, "products"));
+      productsSnap.forEach((pDoc) => {
+        const pData = pDoc.data();
+        if (pData.name && pData.image1) {
+          productsMap[pData.name.trim().toLowerCase()] = pData.image1;
+        }
+      });
+    } catch (pErr) {
+      console.warn("Gagal memuat peta produk:", pErr);
+    }
+
+    /* =================================================
        BERSIHKAN HASIL LAMA
     ================================================= */
 
@@ -222,7 +238,8 @@ async function searchOrder() {
 
       displayOrder(
         order,
-        doc.id
+        doc.id,
+        productsMap
       );
 
     });
@@ -304,20 +321,6 @@ function displayOrder(
 
 
   /* =================================================
-     PRICE & SHIPPING BREAKDOWN
-  ================================================= */
-
-  const productPrice = Number(order.productPrice || order.price || 0);
-  const shippingFee = Number(order.shippingFee || 0);
-  const totalPrice = Number(order.totalPrice || (productPrice + shippingFee));
-  const shippingRegion = order.shippingRegion || "Standard";
-
-  const formattedTotal = `Rp ${totalPrice.toLocaleString("id-ID")}`;
-  const formattedSubtotal = `Rp ${productPrice.toLocaleString("id-ID")}`;
-  const formattedShipping = `Rp ${shippingFee.toLocaleString("id-ID")}`;
-
-
-  /* =================================================
      DATE
   ================================================= */
 
@@ -339,21 +342,23 @@ function displayOrder(
   const card = document.createElement("div");
   card.className = "order-card";
 
-    const productImage = order.productImage || "";
-    let productIconHtml = `
-      <div class="order-product-icon" style="background:#111; color:#fff; display:flex; align-items:center; justify-content:center;">
-        <i class="bx bx-t-shirt" style="font-size:28px; color:#fff;"></i>
+  const pNameKey = (order.productName || "").trim().toLowerCase();
+  const productImage = order.productImage || productsMap[pNameKey] || "";
+
+  let productIconHtml = `
+    <div class="order-product-icon" style="background:#f5f5f3; color:#111; display:flex; align-items:center; justify-content:center; border-radius:16px; border:1px solid #eee; width:60px; height:60px; flex-shrink:0;">
+      <i class="ri-shirt-line" style="font-size:26px; color:#111;"></i>
+    </div>
+  `;
+
+  if (productImage) {
+    const imgUrl = getImagePath(productImage);
+    productIconHtml = `
+      <div class="order-product-icon" style="overflow:hidden; border:1px solid #eee; display:flex; align-items:center; justify-content:center; background:#f8f8f8; border-radius:16px; width:60px; height:60px; flex-shrink:0;">
+        <img src="${imgUrl}" alt="${escapeHTML(order.productName || 'Product')}" style="width:100%; height:100%; object-fit:cover; border-radius:16px;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'ri-shirt-line\' style=\'font-size:26px; color:#111;\'></i>';">
       </div>
     `;
-
-    if (productImage) {
-      const imgUrl = getImagePath(productImage);
-      productIconHtml = `
-        <div class="order-product-icon" style="overflow:hidden; border:1px solid #eee; display:flex; align-items:center; justify-content:center; background:#f8f8f8;">
-          <img src="${imgUrl}" alt="${escapeHTML(order.productName || 'Product')}" style="width:100%; height:100%; object-fit:cover; border-radius:16px;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'bx bx-t-shirt\' style=\'font-size:28px; color:#111;\'></i>';">
-        </div>
-      `;
-    }
+  }
 
   card.innerHTML = `
 
