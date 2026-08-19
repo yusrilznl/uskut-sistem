@@ -21,6 +21,8 @@ const searchOrderBtn =
 const orderResult =
   document.getElementById("orderResult");
 
+let globalProductsMap = {};
+
 
 /* =====================================================
    STATUS ORDER
@@ -206,13 +208,13 @@ async function searchOrder() {
     /* =================================================
        PETA PRODUK UNTUK COCOKKAN GAMBAR DARI FIRESTORE
     ================================================= */
-    const productsMap = {};
+    globalProductsMap = {};
     try {
       const productsSnap = await getDocs(collection(db, "products"));
       productsSnap.forEach((pDoc) => {
         const pData = pDoc.data();
         if (pData.name && pData.image1) {
-          productsMap[pData.name.trim().toLowerCase()] = pData.image1;
+          globalProductsMap[pData.name.trim().toLowerCase()] = pData.image1;
         }
       });
     } catch (pErr) {
@@ -305,7 +307,7 @@ function displayOrder(
   orderId,
   productsMap = {}
 ) {
-
+  const pMap = (productsMap && Object.keys(productsMap).length > 0) ? productsMap : globalProductsMap;
 
   /* =================================================
      PRICE FORMATTING
@@ -356,7 +358,7 @@ function displayOrder(
   card.className = "order-card";
 
   const pNameKey = (order.productName || "").trim().toLowerCase();
-  const productImage = order.productImage || productsMap[pNameKey] || "";
+  const productImage = order.productImage || pMap[pNameKey] || "";
 
   let productIconHtml = `
     <div class="order-product-icon" style="background:#f5f5f3; color:#111; display:flex; align-items:center; justify-content:center; border-radius:16px; border:1px solid #eee; width:60px; height:60px; flex-shrink:0;">
