@@ -46,11 +46,29 @@ document.addEventListener("DOMContentLoaded", function () {
   loadStoreSettingsClient();
 
   /* =====================================================
+     NAVBAR MENU SANITIZER & RENDERER
+  ===================================================== */
+  const navMenu = document.querySelector(".nav-menu");
+  if (navMenu) {
+    const path = window.location.pathname.toLowerCase();
+    const isDrop = path.includes("drop.html");
+    const isProgress = path.includes("progress.html");
+    const isAbout = path.includes("about.html");
+    const isHome = !isDrop && !isProgress && !isAbout;
+
+    navMenu.innerHTML = `
+      <a href="index.html" class="${isHome ? 'active' : ''}">Home</a>
+      <a href="drop.html" class="${isDrop ? 'active' : ''}">Drop</a>
+      <a href="progress.html" class="${isProgress ? 'active' : ''}">Progress</a>
+      <a href="about.html" class="${isAbout ? 'active' : ''}">About Us</a>
+    `;
+  }
+
+  /* =====================================================
      HAMBURGER MENU
   ===================================================== */
 
   const hamburgerMenu = document.getElementById("hamburger-menu");
-  const navMenu = document.querySelector(".nav-menu");
 
   if (hamburgerMenu && navMenu) {
 
