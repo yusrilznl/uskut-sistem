@@ -113,11 +113,24 @@
     }
 
 
+    .admin-sidebar-top {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 35px;
+
+    }
+
+
     .admin-logo {
 
-      margin-bottom: 45px;
+      margin-bottom: 0;
 
-      padding-left: 10px;
+      padding-left: 0;
 
     }
 
@@ -793,15 +806,20 @@
         background: #111111;
         z-index: 100;
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
+        overflow: visible !important;
         box-shadow: 0 4px 15px rgba(0,0,0,0.15);
       }
 
+      .admin-sidebar-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 12px;
+      }
+
       .admin-logo {
-        order: 1;
         margin-bottom: 0;
         padding-left: 0;
       }
@@ -818,9 +836,7 @@
       }
 
       .admin-logout {
-        order: 2;
         margin-top: 0;
-        margin-left: auto;
       }
 
       .admin-logout button {
@@ -836,16 +852,15 @@
       }
 
       .admin-menu {
-        order: 3;
-        width: 100%;
-        margin-top: 12px;
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        gap: 8px;
-        padding-bottom: 4px;
-        -webkit-overflow-scrolling: touch;
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        width: 100% !important;
+        gap: 8px !important;
+        padding-bottom: 6px !important;
+        -webkit-overflow-scrolling: touch !important;
+        min-height: 44px !important;
       }
 
       .admin-menu::-webkit-scrollbar {
@@ -858,19 +873,22 @@
       }
 
       .admin-menu a {
-        white-space: nowrap;
-        flex-shrink: 0;
-        padding: 9px 14px;
-        font-size: 12px;
-        color: #ffffff;
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        padding: 9px 14px !important;
+        font-size: 12px !important;
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 10px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
       }
 
       .admin-menu a i {
-        font-size: 16px;
-        color: #ffffff;
+        font-size: 16px !important;
+        color: #ffffff !important;
       }
 
       .admin-menu a span {
@@ -880,8 +898,8 @@
       .admin-menu a.active {
         background: #ffffff !important;
         color: #111111 !important;
-        border-color: #ffffff;
-        font-weight: 700;
+        border-color: #ffffff !important;
+        font-weight: 700 !important;
       }
 
       .admin-menu a.active i,
@@ -1241,18 +1259,42 @@
   <aside class="admin-sidebar">
 
 
-    <!-- LOGO -->
+    <!-- TOP HEADER -->
 
-    <div class="admin-logo">
+    <div class="admin-sidebar-top">
 
-      <h2>USKUT</h2>
+      <div class="admin-logo">
 
-      <span>ADMIN PANEL</span>
+        <h2>USKUT</h2>
+
+        <span>ADMIN PANEL</span>
+
+      </div>
+
+
+      <!-- LOGOUT -->
+
+      <div class="admin-logout">
+
+        <button
+          type="button"
+          id="logoutBtn"
+        >
+
+          <i class="bx bx-log-out"></i>
+
+          <span>
+            Logout
+          </span>
+
+        </button>
+
+      </div>
 
     </div>
 
 
-    <!-- MENU -->
+    <!-- MENU TABS -->
 
     <nav class="admin-menu">
 
@@ -1306,26 +1348,6 @@
 
 
     </nav>
-
-
-    <!-- LOGOUT -->
-
-    <div class="admin-logout">
-
-      <button
-        type="button"
-        id="logoutBtn"
-      >
-
-        <i class="bx bx-log-out"></i>
-
-        <span>
-          Logout
-        </span>
-
-      </button>
-
-    </div>
 
 
   </aside>
