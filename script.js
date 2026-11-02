@@ -7,12 +7,29 @@ document.addEventListener("DOMContentLoaded", function () {
     adminWaPhone: "6281234567890",
     preorderTargetDate: "Dec 30, 2026 23:59:59",
     bankAccounts: [
-      { bank: "Bank BCA", number: "1234567890", holder: "USKUT" },
-      { bank: "Bank Mandiri", number: "0987654321", holder: "USKUT" }
+      { bank: "Bank BCA", number: "0374816191", holder: "USKUT" },
+      { bank: "Bank Mandiri", number: "9000035962704", holder: "USKUT" }
     ]
   };
 
   let dynamicTargetTimestamp = new Date(ADMIN_CONFIG.preorderTargetDate).getTime();
+
+  function renderBankAccountsHtml() {
+    if (!ADMIN_CONFIG.bankAccounts || ADMIN_CONFIG.bankAccounts.length === 0) {
+      return `<div>🏦 <strong>Bank BCA:</strong> 0374816191 (a.n. USKUT)</div>`;
+    }
+    return ADMIN_CONFIG.bankAccounts
+      .filter(acc => acc.bank && acc.number)
+      .map(acc => `<div>🏦 <strong>${acc.bank}:</strong> ${acc.number} (a.n. ${acc.holder || 'USKUT'})</div>`)
+      .join("");
+  }
+
+  function updateCheckoutBankDisplay() {
+    const el = document.getElementById("checkoutBankList");
+    if (el) {
+      el.innerHTML = renderBankAccountsHtml();
+    }
+  }
 
   async function loadStoreSettingsClient() {
     try {
@@ -24,12 +41,32 @@ document.addEventListener("DOMContentLoaded", function () {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.adminWaPhone) ADMIN_CONFIG.adminWaPhone = data.adminWaPhone;
-        if (data.bankBca) {
-          ADMIN_CONFIG.bankAccounts[0] = { bank: "Bank BCA", number: data.bankBca, holder: "" };
+
+        // Structured bank accounts support
+        if (data.bankAccounts && Array.isArray(data.bankAccounts) && data.bankAccounts.length > 0) {
+          ADMIN_CONFIG.bankAccounts = data.bankAccounts.filter(b => b.bank && b.number);
+        } else {
+          // Fallback legacy support
+          if (data.bankBca) {
+            const parts = data.bankBca.split(/\s*a\.?n\.?\s*/i);
+            ADMIN_CONFIG.bankAccounts[0] = {
+              bank: "Bank BCA",
+              number: parts[0] ? parts[0].trim() : data.bankBca,
+              holder: parts[1] ? parts[1].trim() : "USKUT"
+            };
+          }
+          if (data.bankMandiri) {
+            const parts = data.bankMandiri.split(/\s*a\.?n\.?\s*/i);
+            ADMIN_CONFIG.bankAccounts[1] = {
+              bank: "Bank Mandiri",
+              number: parts[0] ? parts[0].trim() : data.bankMandiri,
+              holder: parts[1] ? parts[1].trim() : "USKUT"
+            };
+          }
         }
-        if (data.bankMandiri) {
-          ADMIN_CONFIG.bankAccounts[1] = { bank: "Bank Mandiri", number: data.bankMandiri, holder: "" };
-        }
+
+        updateCheckoutBankDisplay();
+
         if (data.preorderTargetDate) {
           // Parse HTML datetime-local (e.g., "2026-12-30T23:59") or date string
           const parsedDate = new Date(data.preorderTargetDate);
@@ -306,8 +343,8 @@ document.addEventListener("DOMContentLoaded", function () {
           <h4 style="margin:0 0 10px 0; font-size:14px; color:#111; display:flex; align-items:center; gap:6px;">
             <i class="bx bx-credit-card-front" style="font-size:18px;"></i> Rekening Pembayaran Transfer
           </h4>
-          <div style="font-size:13px; color:#444; line-height:1.7;">
-            ${ADMIN_CONFIG.bankAccounts.map(acc => `<div>🏦 <strong>${acc.bank}:</strong> ${acc.number} (a.n. ${acc.holder})</div>`).join("")}
+          <div id="checkoutBankList" style="font-size:13px; color:#444; line-height:1.7;">
+            ${renderBankAccountsHtml()}
           </div>
           <small style="display:block; margin-top:8px; color:#777; font-size:11px;">Silakan lakukan transfer sesuai Total Tagihan di bawah, lalu upload foto/screenshot bukti transfer.</small>
         </div>
@@ -1132,6 +1169,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       setupPaymentProofListener();
       loadShippingRatesCheckout();
+      updateCheckoutBankDisplay();
 
       checkoutModal.classList.add("show");
     });

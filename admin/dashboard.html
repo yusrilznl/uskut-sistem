@@ -1990,37 +1990,96 @@
           </div>
 
 
-          <!-- REKENING BCA -->
-          <div class="admin-form-group" style="margin-top: 20px;">
+          <!-- ==========================================
+               PENGATURAN REKENING PEMBAYARAN 1 (UTAMA)
+          =========================================== -->
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-top: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+              <h4 style="margin: 0; font-size: 15px; font-weight: 700; color: #111; display: flex; align-items: center; gap: 8px;">
+                <i class="bx bx-credit-card" style="font-size: 20px; color: #2563eb;"></i> Rekening Pembayaran 1 (Utama)
+              </h4>
+              <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px; font-weight: 600;">Wajib Diisi</span>
+            </div>
 
-            <label for="bankBcaInput">
-              Rekening Bank BCA
-            </label>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+              <div class="admin-form-group">
+                <label for="bank1Select">Pilih Nama Bank / E-Wallet</label>
+                <select id="bank1Select" required>
+                  <option value="Bank BCA">Bank BCA</option>
+                  <option value="Bank Mandiri">Bank Mandiri</option>
+                  <option value="Bank BRI">Bank BRI</option>
+                  <option value="Bank BNI">Bank BNI</option>
+                  <option value="Bank Syariah Indonesia (BSI)">Bank Syariah Indonesia (BSI)</option>
+                  <option value="Bank CIMB Niaga">Bank CIMB Niaga</option>
+                  <option value="Bank Permata">Bank Permata</option>
+                  <option value="Bank Danamon">Bank Danamon</option>
+                  <option value="Bank Jago">Bank Jago</option>
+                  <option value="SeaBank">SeaBank</option>
+                  <option value="DANA">DANA</option>
+                  <option value="GoPay">GoPay</option>
+                  <option value="OVO">OVO</option>
+                  <option value="other">Bank / E-Wallet Lainnya...</option>
+                </select>
+                <input type="text" id="bank1CustomInput" placeholder="Ketik nama bank lainnya..." style="display: none; margin-top: 8px;">
+              </div>
 
-            <input
-              type="text"
-              id="bankBcaInput"
-              placeholder="Nomor Rekening & Atas Nama (contoh: 1234567890 a.n. USKUT)"
-              required
-            >
+              <div class="admin-form-group">
+                <label for="bank1NumberInput">Nomor Rekening / No. HP</label>
+                <input type="text" id="bank1NumberInput" placeholder="Contoh: 0374816191" required>
+              </div>
 
+              <div class="admin-form-group">
+                <label for="bank1HolderInput">Atas Nama (Nama Pemilik)</label>
+                <input type="text" id="bank1HolderInput" placeholder="Contoh: USKUT" required>
+              </div>
+            </div>
           </div>
 
 
-          <!-- REKENING MANDIRI -->
-          <div class="admin-form-group" style="margin-top: 20px;">
+          <!-- ==========================================
+               PENGATURAN REKENING PEMBAYARAN 2 (OPSIONAL)
+          =========================================== -->
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-top: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+              <h4 style="margin: 0; font-size: 15px; font-weight: 700; color: #111; display: flex; align-items: center; gap: 8px;">
+                <i class="bx bx-credit-card-front" style="font-size: 20px; color: #10b981;"></i> Rekening Pembayaran 2 (Opsional / Cadangan)
+              </h4>
+              <span style="font-size: 11px; background: #f1f5f9; color: #64748b; padding: 3px 8px; border-radius: 6px; font-weight: 600;">Opsional</span>
+            </div>
 
-            <label for="bankMandiriInput">
-              Rekening Bank Mandiri
-            </label>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+              <div class="admin-form-group">
+                <label for="bank2Select">Pilih Nama Bank / E-Wallet</label>
+                <select id="bank2Select">
+                  <option value="">-- Tidak Ada / Kosongkan --</option>
+                  <option value="Bank Mandiri">Bank Mandiri</option>
+                  <option value="Bank BCA">Bank BCA</option>
+                  <option value="Bank BRI">Bank BRI</option>
+                  <option value="Bank BNI">Bank BNI</option>
+                  <option value="Bank Syariah Indonesia (BSI)">Bank Syariah Indonesia (BSI)</option>
+                  <option value="Bank CIMB Niaga">Bank CIMB Niaga</option>
+                  <option value="Bank Permata">Bank Permata</option>
+                  <option value="Bank Danamon">Bank Danamon</option>
+                  <option value="Bank Jago">Bank Jago</option>
+                  <option value="SeaBank">SeaBank</option>
+                  <option value="DANA">DANA</option>
+                  <option value="GoPay">GoPay</option>
+                  <option value="OVO">OVO</option>
+                  <option value="other">Bank / E-Wallet Lainnya...</option>
+                </select>
+                <input type="text" id="bank2CustomInput" placeholder="Ketik nama bank lainnya..." style="display: none; margin-top: 8px;">
+              </div>
 
-            <input
-              type="text"
-              id="bankMandiriInput"
-              placeholder="Nomor Rekening & Atas Nama (contoh: 0987654321 a.n. USKUT)"
-              required
-            >
+              <div class="admin-form-group">
+                <label for="bank2NumberInput">Nomor Rekening / No. HP</label>
+                <input type="text" id="bank2NumberInput" placeholder="Contoh: 9000035962704">
+              </div>
 
+              <div class="admin-form-group">
+                <label for="bank2HolderInput">Atas Nama (Nama Pemilik)</label>
+                <input type="text" id="bank2HolderInput" placeholder="Contoh: USKUT">
+              </div>
+            </div>
           </div>
 
 
@@ -2274,7 +2333,7 @@
 
 <script
   type="module"
-  src="dashboard.js?v=12"
+  src="dashboard.js?v=13"
 ></script>
 
 

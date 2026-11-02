@@ -74,9 +74,42 @@ const shippingForm = document.getElementById("shippingForm");
 const storeSettingsForm = document.getElementById("storeSettingsForm");
 const adminWaPhoneInput = document.getElementById("adminWaPhoneInput");
 const preorderTargetDateInput = document.getElementById("preorderTargetDateInput");
-const bankBcaInput = document.getElementById("bankBcaInput");
-const bankMandiriInput = document.getElementById("bankMandiriInput");
+
+// REKENING BANK 1 & 2 ELEMENTS
+const bank1Select = document.getElementById("bank1Select");
+const bank1CustomInput = document.getElementById("bank1CustomInput");
+const bank1NumberInput = document.getElementById("bank1NumberInput");
+const bank1HolderInput = document.getElementById("bank1HolderInput");
+
+const bank2Select = document.getElementById("bank2Select");
+const bank2CustomInput = document.getElementById("bank2CustomInput");
+const bank2NumberInput = document.getElementById("bank2NumberInput");
+const bank2HolderInput = document.getElementById("bank2HolderInput");
+
 const saveStoreSettingsBtn = document.getElementById("saveStoreSettingsBtn");
+
+// Toggle Custom Bank Name Input on Select Change
+if (bank1Select && bank1CustomInput) {
+  bank1Select.addEventListener("change", () => {
+    if (bank1Select.value === "other") {
+      bank1CustomInput.style.display = "block";
+      bank1CustomInput.focus();
+    } else {
+      bank1CustomInput.style.display = "none";
+    }
+  });
+}
+
+if (bank2Select && bank2CustomInput) {
+  bank2Select.addEventListener("change", () => {
+    if (bank2Select.value === "other") {
+      bank2CustomInput.style.display = "block";
+      bank2CustomInput.focus();
+    } else {
+      bank2CustomInput.style.display = "none";
+    }
+  });
+}
 
 // HAMBURGER MENU & MOBILE SIDEBAR DRAWER
 const adminHamburgerBtn = document.getElementById("adminHamburgerBtn");
@@ -1565,6 +1598,36 @@ window.deleteProductAdmin = deleteProductAdmin;
 // =====================================================
 // STORE SETTINGS (WA, COUNTDOWN, BANK ACCOUNTS)
 // =====================================================
+
+function setBankSelectValue(selectEl, customInputEl, bankName) {
+  if (!selectEl) return;
+  if (!bankName) {
+    selectEl.value = "";
+    if (customInputEl) customInputEl.style.display = "none";
+    return;
+  }
+  const matchOption = Array.from(selectEl.options).find(opt => opt.value.toLowerCase() === bankName.toLowerCase());
+  if (matchOption) {
+    selectEl.value = matchOption.value;
+    if (customInputEl) customInputEl.style.display = "none";
+  } else {
+    selectEl.value = "other";
+    if (customInputEl) {
+      customInputEl.value = bankName;
+      customInputEl.style.display = "block";
+    }
+  }
+}
+
+function parseLegacyBankString(str) {
+  if (!str) return { number: "", holder: "USKUT" };
+  const parts = str.split(/\s*a\.?n\.?\s*/i);
+  return {
+    number: parts[0] ? parts[0].trim() : "",
+    holder: parts[1] ? parts[1].trim() : "USKUT"
+  };
+}
+
 async function loadStoreSettingsAdmin() {
   if (!adminWaPhoneInput) return;
 
@@ -1576,13 +1639,48 @@ async function loadStoreSettingsAdmin() {
       if (preorderTargetDateInput && data.preorderTargetDate) {
         preorderTargetDateInput.value = data.preorderTargetDate;
       }
-      if (bankBcaInput) bankBcaInput.value = data.bankBca || "1234567890 a.n. USKUT";
-      if (bankMandiriInput) bankMandiriInput.value = data.bankMandiri || "0987654321 a.n. USKUT";
+
+      // Populate Bank Accounts
+      if (data.bankAccounts && Array.isArray(data.bankAccounts) && data.bankAccounts.length > 0) {
+        // Bank 1
+        const b1 = data.bankAccounts[0];
+        setBankSelectValue(bank1Select, bank1CustomInput, b1.bank || "Bank BCA");
+        if (bank1NumberInput) bank1NumberInput.value = b1.number || "";
+        if (bank1HolderInput) bank1HolderInput.value = b1.holder || "USKUT";
+
+        // Bank 2
+        if (data.bankAccounts.length > 1) {
+          const b2 = data.bankAccounts[1];
+          setBankSelectValue(bank2Select, bank2CustomInput, b2.bank || "");
+          if (bank2NumberInput) bank2NumberInput.value = b2.number || "";
+          if (bank2HolderInput) bank2HolderInput.value = b2.holder || "";
+        } else {
+          setBankSelectValue(bank2Select, bank2CustomInput, "");
+          if (bank2NumberInput) bank2NumberInput.value = "";
+          if (bank2HolderInput) bank2HolderInput.value = "";
+        }
+      } else {
+        // Fallback to legacy fields
+        const legacyBca = parseLegacyBankString(data.bankBca || "0374816191 a.n. USKUT");
+        setBankSelectValue(bank1Select, bank1CustomInput, "Bank BCA");
+        if (bank1NumberInput) bank1NumberInput.value = legacyBca.number;
+        if (bank1HolderInput) bank1HolderInput.value = legacyBca.holder;
+
+        const legacyMandiri = parseLegacyBankString(data.bankMandiri || "9000035962704 a.n. USKUT");
+        setBankSelectValue(bank2Select, bank2CustomInput, "Bank Mandiri");
+        if (bank2NumberInput) bank2NumberInput.value = legacyMandiri.number;
+        if (bank2HolderInput) bank2HolderInput.value = legacyMandiri.holder;
+      }
     } else {
       if (adminWaPhoneInput) adminWaPhoneInput.value = "6281234567890";
       if (preorderTargetDateInput) preorderTargetDateInput.value = "2026-12-30T23:59";
-      if (bankBcaInput) bankBcaInput.value = "1234567890 a.n. USKUT";
-      if (bankMandiriInput) bankMandiriInput.value = "0987654321 a.n. USKUT";
+      setBankSelectValue(bank1Select, bank1CustomInput, "Bank BCA");
+      if (bank1NumberInput) bank1NumberInput.value = "0374816191";
+      if (bank1HolderInput) bank1HolderInput.value = "USKUT";
+
+      setBankSelectValue(bank2Select, bank2CustomInput, "Bank Mandiri");
+      if (bank2NumberInput) bank2NumberInput.value = "9000035962704";
+      if (bank2HolderInput) bank2HolderInput.value = "USKUT";
     }
   } catch (err) {
     console.error("Gagal memuat pengaturan toko:", err);
@@ -1595,11 +1693,25 @@ if (storeSettingsForm) {
 
     const adminWaPhone = adminWaPhoneInput.value.trim();
     const preorderTargetDate = preorderTargetDateInput.value;
-    const bankBca = bankBcaInput.value.trim();
-    const bankMandiri = bankMandiriInput.value.trim();
 
-    if (!adminWaPhone || !preorderTargetDate || !bankBca || !bankMandiri) {
-      alert("Mohon isi semua bidang pengaturan toko.");
+    // Bank 1 values
+    let bank1Name = bank1Select ? bank1Select.value : "";
+    if (bank1Name === "other" && bank1CustomInput) {
+      bank1Name = bank1CustomInput.value.trim();
+    }
+    const bank1Number = bank1NumberInput ? bank1NumberInput.value.trim() : "";
+    const bank1Holder = bank1HolderInput ? bank1HolderInput.value.trim() : "";
+
+    // Bank 2 values
+    let bank2Name = bank2Select ? bank2Select.value : "";
+    if (bank2Name === "other" && bank2CustomInput) {
+      bank2Name = bank2CustomInput.value.trim();
+    }
+    const bank2Number = bank2NumberInput ? bank2NumberInput.value.trim() : "";
+    const bank2Holder = bank2HolderInput ? bank2HolderInput.value.trim() : "";
+
+    if (!adminWaPhone || !preorderTargetDate || !bank1Name || !bank1Number || !bank1Holder) {
+      alert("Mohon lengkapi Nomor WhatsApp, Target Countdown, dan data Rekening Utama (Bank 1).");
       return;
     }
 
@@ -1609,15 +1721,32 @@ if (storeSettingsForm) {
     }
 
     try {
+      const bankAccounts = [];
+      bankAccounts.push({
+        bank: bank1Name,
+        number: bank1Number,
+        holder: bank1Holder
+      });
+
+      if (bank2Name && bank2Number) {
+        bankAccounts.push({
+          bank: bank2Name,
+          number: bank2Number,
+          holder: bank2Holder || bank1Holder
+        });
+      }
+
       await setDoc(doc(db, "store_settings", "general"), {
         adminWaPhone,
         preorderTargetDate,
-        bankBca,
-        bankMandiri,
+        bankAccounts,
+        // Backward compatibility
+        bankBca: `${bank1Number} a.n. ${bank1Holder}`,
+        bankMandiri: bank2Number ? `${bank2Number} a.n. ${bank2Holder || bank1Holder}` : "",
         updatedAt: new Date()
       }, { merge: true });
 
-      alert("Pengaturan Toko & Pre-Order berhasil disimpan! 🎉");
+      alert("Pengaturan Toko, Nomor Rekening & Pre-Order berhasil disimpan! 🎉");
     } catch (err) {
       console.error("Gagal menyimpan pengaturan toko:", err);
       alert("Gagal menyimpan pengaturan toko. Silakan coba lagi.");
