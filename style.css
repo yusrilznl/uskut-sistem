@@ -2274,6 +2274,160 @@ footer a:hover {
 
 
 /* =====================================================
+   SHIPPING & TRACKING RECEIPT BOX
+===================================================== */
+
+.order-shipping-box {
+  background: #fafaf9;
+  border: 1.5px solid #111;
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.shipping-box-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.shipping-box-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #111;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.shipping-box-badge i {
+  font-size: 15px;
+}
+
+.shipping-date {
+  font-size: 12px;
+  color: #666;
+}
+
+.shipping-box-body {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.shipping-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #888;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.shipping-courier-name {
+  font-size: 15px;
+  color: #111;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shipping-courier-name i {
+  font-size: 18px;
+  color: #111;
+}
+
+.shipping-resi-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.shipping-resi-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #111;
+  background: #f1f3f5;
+  border: 1px solid #dcdfe3;
+  padding: 8px 14px;
+  border-radius: 10px;
+  user-select: all;
+}
+
+.btn-copy-resi {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-copy-resi:hover {
+  background: #333;
+  transform: translateY(-1px);
+}
+
+.btn-copy-resi.copied {
+  background: #198754 !important;
+  color: #fff !important;
+}
+
+.shipping-box-note {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #eef0f2;
+  font-size: 12px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shipping-box-note i {
+  font-size: 15px;
+  color: #111;
+}
+
+@media (max-width: 640px) {
+  .order-shipping-box {
+    padding: 16px;
+  }
+  .shipping-box-body {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .shipping-resi-code {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}
+
+
+/* =====================================================
    TIMELINE
 ===================================================== */
 

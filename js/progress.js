@@ -495,6 +495,48 @@ function displayOrder(
 
 
 
+    <!-- SHIPPING RECEIPT & TRACKING (IF AVAILABLE) -->
+    ${order.trackingNumber ? `
+      <div class="order-shipping-box">
+        <div class="shipping-box-top">
+          <div class="shipping-box-badge">
+            <i class="bx bx-package"></i> Pesanan Sedang Dikirim
+          </div>
+          ${order.shippedAt && typeof order.shippedAt.toDate === "function" ? `
+            <span class="shipping-date">Dikirim pada: <strong>${order.shippedAt.toDate().toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" })}</strong></span>
+          ` : ""}
+        </div>
+
+        <div class="shipping-box-body">
+          <div class="shipping-courier-info">
+            <span class="shipping-label">Jasa Ekspedisi / Kurir</span>
+            <strong class="shipping-courier-name">
+              <i class="bx bx-trip"></i> ${escapeHTML(order.courier || "Ekspedisi Pengiriman")}
+            </strong>
+          </div>
+
+          <div class="shipping-resi-info">
+            <span class="shipping-label">Nomor Resi Pengiriman</span>
+            <div class="shipping-resi-wrapper">
+              <code class="shipping-resi-code" id="resi_${orderId}">${escapeHTML(order.trackingNumber)}</code>
+              <button type="button" class="btn-copy-resi" onclick="window.copyTrackingResi('${escapeHTML(order.trackingNumber)}', this)" title="Salin nomor resi pengiriman">
+                <i class="bx bx-copy"></i> <span>Salin Resi</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        ${order.trackingNote ? `
+          <div class="shipping-box-note">
+            <i class="bx bx-info-circle"></i>
+            <span>${escapeHTML(order.trackingNote)}</span>
+          </div>
+        ` : ""}
+      </div>
+    ` : ""}
+
+
+
     <!-- TIMELINE -->
 
     <div class="order-timeline">
@@ -655,6 +697,53 @@ if (searchPhone) {
     }
   );
 
+}
+
+
+/* =====================================================
+   COPY TRACKING RESI HELPER
+===================================================== */
+
+window.copyTrackingResi = function(resi, btn) {
+  if (!resi) return;
+
+  function setCopiedState() {
+    if (!btn) return;
+    const originalHtml = btn.innerHTML;
+    btn.classList.add("copied");
+    btn.innerHTML = `<i class="bx bx-check"></i> <span>Tersalin!</span>`;
+    setTimeout(() => {
+      btn.classList.remove("copied");
+      btn.innerHTML = originalHtml;
+    }, 2000);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(resi)
+      .then(setCopiedState)
+      .catch(() => fallbackCopy(resi, setCopiedState));
+  } else {
+    fallbackCopy(resi, setCopiedState);
+  }
+};
+
+function fallbackCopy(text, callback) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand("copy");
+    if (callback) callback();
+  } catch (err) {
+    alert("Nomor Resi: " + text);
+  }
+  document.body.removeChild(textArea);
 }
 
 

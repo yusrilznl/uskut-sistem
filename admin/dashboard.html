@@ -1292,10 +1292,79 @@
       color: #155724;
       border: 1px solid #c3e6cb;
     }
+    .status-badge.processing {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+    .status-badge.shipped {
+      background: #ede9fe;
+      color: #6d28d9;
+      border: 1px solid #ddd6fe;
+    }
+    .status-badge.completed {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
     .status-badge.rejected {
       background: #f8d7da;
       color: #721c24;
       border: 1px solid #f5c6cb;
+    }
+    .btn-resi-add {
+      background: #111;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-resi-add:hover {
+      background: #333;
+      transform: translateY(-1px);
+    }
+    .btn-resi-edit {
+      background: #f8f9fa;
+      color: #333;
+      border: 1px solid #d1d5db;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-resi-edit:hover {
+      background: #e5e7eb;
+      color: #111;
+    }
+    .order-status-select {
+      display: block;
+      margin-top: 6px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 11px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+      max-width: 140px;
+    }
+    .order-status-select:focus {
+      outline: none;
+      border-color: #111;
     }
     .proof-thumb {
       width: 48px;
@@ -1762,6 +1831,10 @@
 
                 <th>
                   Status
+                </th>
+
+                <th>
+                  Resi Pengiriman
                 </th>
 
                 <th>
@@ -2328,12 +2401,147 @@
 
 
 <!-- =====================================================
+     TRACKING MODAL (INPUT / EDIT RESI PENGIRIMAN)
+===================================================== -->
+
+<div class="admin-modal" id="trackingAdminModal">
+
+  <div class="admin-modal-content" style="max-width: 480px;">
+
+    <div class="admin-modal-header">
+
+      <h3 id="trackingModalTitle" style="display: flex; align-items: center; gap: 8px;">
+        <i class="bx bx-package" style="color: #111;"></i> Input Resi Pengiriman
+      </h3>
+
+      <button type="button" class="admin-modal-close" id="closeTrackingModalBtn">&times;</button>
+
+    </div>
+
+
+    <form id="trackingForm">
+
+      <input type="hidden" id="trackingOrderId">
+
+      <!-- Order Summary Box -->
+      <div style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 14px 16px; margin-bottom: 20px;">
+
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+          <span style="color: #666;">No. Pesanan:</span>
+          <strong id="trackingOrderDisplayId" style="font-family: monospace; color: #111;">-</strong>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+          <span style="color: #666;">Pelanggan:</span>
+          <strong id="trackingCustomerName" style="color: #111;">-</strong>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 13px;">
+          <span style="color: #666;">Tujuan:</span>
+          <span id="trackingDestination" style="font-weight: 500; color: #111;">-</span>
+        </div>
+
+      </div>
+
+
+      <!-- Pilihan Kurir -->
+      <div class="admin-form-group">
+
+        <label for="trackingCourierSelect">Pilih Jasa Ekspedisi / Kurir *</label>
+
+        <select id="trackingCourierSelect" required style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 14px; background: #fff;">
+          <option value="" disabled selected>-- Pilih Ekspedisi --</option>
+          <option value="J&T Express">J&T Express</option>
+          <option value="JNE Express">JNE Express</option>
+          <option value="SiCepat Ekspres">SiCepat Ekspres</option>
+          <option value="SPX Express (Shopee Xpress)">SPX Express (Shopee Xpress)</option>
+          <option value="Anteraja">Anteraja</option>
+          <option value="ID Express">ID Express</option>
+          <option value="Ninja Xpress">Ninja Xpress</option>
+          <option value="TIKI">TIKI</option>
+          <option value="Pos Indonesia">Pos Indonesia</option>
+          <option value="Wahana Express">Wahana Express</option>
+          <option value="Lion Parcel">Lion Parcel</option>
+          <option value="Lainnya">Lainnya (Ketik Manual)</option>
+        </select>
+
+      </div>
+
+
+      <!-- Custom Kurir (jika pilih Lainnya) -->
+      <div class="admin-form-group" id="trackingCustomCourierGroup" style="display: none;">
+
+        <label for="trackingCustomCourierInput">Nama Ekspedisi Lainnya</label>
+
+        <input type="text" id="trackingCustomCourierInput" placeholder="Contoh: Paxel, Deliveree, dll">
+
+      </div>
+
+
+      <!-- Nomor Resi -->
+      <div class="admin-form-group">
+
+        <label for="trackingNumberInput">Nomor Resi Pengiriman *</label>
+
+        <input type="text" id="trackingNumberInput" placeholder="Contoh: JP82910482910" required style="font-family: monospace; font-size: 15px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">
+
+      </div>
+
+
+      <!-- Catatan Pengiriman -->
+      <div class="admin-form-group">
+
+        <label for="trackingNoteInput">Catatan / Estimasi Pengiriman (Opsional)</label>
+
+        <input type="text" id="trackingNoteInput" placeholder="Contoh: Estimasi tiba 2-3 hari kerja">
+
+      </div>
+
+
+      <!-- Checkbox Auto Shipped -->
+      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+
+        <input type="checkbox" id="trackingAutoShippedCheck" checked style="width: 18px; height: 18px; margin-top: 2px; accent-color: #198754; cursor: pointer;">
+
+        <label for="trackingAutoShippedCheck" style="font-size: 13px; color: #166534; cursor: pointer; margin: 0; line-height: 1.4;">
+          <strong>Otomatis ubah status pesanan menjadi "Pesanan Dikirim"</strong><br>
+          <span style="font-size: 11px; color: #15803d;">Pelanggan akan melihat status pesanan telah dikirim pada timeline pelacakan.</span>
+        </label>
+
+      </div>
+
+
+      <!-- Tombol Aksi -->
+      <div style="display: flex; gap: 10px; justify-content: flex-end; align-items: center; border-top: 1px solid #eee; padding-top: 16px;">
+
+        <button type="button" id="trackingDeleteBtn" class="btn-reject-admin" style="display: none; margin-right: auto; padding: 8px 14px;" title="Hapus resi dari pesanan ini">
+          <i class="bx bx-trash"></i> Hapus Resi
+        </button>
+
+        <button type="button" class="btn-secondary-admin" id="cancelTrackingBtn" style="padding: 10px 18px; border-radius: 10px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-weight: 600;">
+          Batal
+        </button>
+
+        <button type="submit" class="btn-primary-admin" id="saveTrackingSubmitBtn" style="padding: 10px 22px; border-radius: 10px; background: #111; color: #fff; border: none; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="bx bx-save"></i> Simpan Resi
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
      JAVASCRIPT
 ===================================================== -->
 
 <script
   type="module"
-  src="dashboard.js?v=13"
+  src="dashboard.js?v=14"
 ></script>
 
 

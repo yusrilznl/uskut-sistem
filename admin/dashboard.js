@@ -15,7 +15,8 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
-  doc
+  doc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 
@@ -255,9 +256,8 @@ onAuthStateChanged(auth, (user) => {
 // LOAD ORDERS
 // =====================================================
 
-// =====================================================
-// LOAD ORDERS (WITH BUKTI TRANSFER & CONFIRMATION)
-// =====================================================
+// Global cache for orders so modals can easily read order data without string escaping issues
+window.ordersCache = {};
 
 async function loadOrders() {
 
@@ -276,11 +276,12 @@ async function loadOrders() {
     let completed = 0;
 
     orderTableBody.innerHTML = "";
+    window.ordersCache = {};
 
     if (snapshot.empty) {
       orderTableBody.innerHTML = `
         <tr>
-          <td colspan="9" style="text-align:center; padding:50px 20px; color:#888;">
+          <td colspan="10" style="text-align:center; padding:50px 20px; color:#888;">
             Belum ada pesanan.
           </td>
         </tr>
@@ -292,6 +293,9 @@ async function loadOrders() {
     snapshot.forEach((docSnap) => {
       const order = docSnap.data();
       const docId = docSnap.id;
+      const orderId = docId.substring(0, 8).toUpperCase();
+
+      window.ordersCache[docId] = { ...order, id: docId, displayId: orderId };
 
       total++;
 
@@ -304,7 +308,6 @@ async function loadOrders() {
         completed++;
       }
 
-      const orderId = docId.substring(0, 8).toUpperCase();
       const productPrice = Number(order.productPrice || order.price || 0);
       const shippingFee = Number(order.shippingFee || 0);
       const totalPrice = Number(order.totalPrice || (productPrice + shippingFee));
@@ -313,15 +316,21 @@ async function loadOrders() {
       let badgeClass = "pending";
       let badgeText = "Menunggu Verifikasi";
 
-      if (status === "confirmed" || status === "pembayaran_dikonfirmasi" || status === "processing") {
+      if (status === "confirmed" || status === "pembayaran_dikonfirmasi") {
         badgeClass = "confirmed";
         badgeText = "Dikonfirmasi";
+      } else if (status === "processing") {
+        badgeClass = "processing";
+        badgeText = "Sedang Diproduksi";
+      } else if (status === "shipped") {
+        badgeClass = "shipped";
+        badgeText = "Pesanan Dikirim";
+      } else if (status === "completed") {
+        badgeClass = "completed";
+        badgeText = "Selesai";
       } else if (status === "rejected" || status === "pembayaran_ditolak") {
         badgeClass = "rejected";
         badgeText = "Ditolak";
-      } else if (status === "completed") {
-        badgeClass = "confirmed";
-        badgeText = "Selesai";
       }
 
       // Bukti Transfer
@@ -329,6 +338,45 @@ async function loadOrders() {
       if (order.paymentProofImage) {
         proofHtml = `<img src="${order.paymentProofImage}" class="proof-thumb" onclick="openPaymentProofModal('${order.paymentProofImage}', '${docId}', '${status}')" title="Klik untuk memperbesar">`;
       }
+
+      // Resi Pengiriman
+      let resiHtml = ``;
+      if (order.trackingNumber) {
+        resiHtml = `
+          <div style="font-size: 12px; line-height: 1.4;">
+            <strong style="color: #111; display: flex; align-items: center; gap: 4px;">
+              <i class="bx bx-package" style="color: #4f46e5;"></i> ${escapeHTML(order.courier || "Ekspedisi")}
+            </strong>
+            <code style="display: inline-block; margin: 3px 0; background: #eef2ff; color: #4338ca; padding: 2px 7px; border-radius: 5px; font-weight: 700; font-size: 11px; letter-spacing: 0.5px;">
+              ${escapeHTML(order.trackingNumber)}
+            </code>
+            <br>
+            <button type="button" class="btn-resi-edit" onclick="openTrackingModal('${docId}')">
+              <i class="bx bx-edit-alt"></i> Edit Resi
+            </button>
+          </div>
+        `;
+      } else {
+        resiHtml = `
+          <button type="button" class="btn-resi-add" onclick="openTrackingModal('${docId}')">
+            <i class="bx bx-plus-circle"></i> Input Resi
+          </button>
+        `;
+      }
+
+      // Quick Status Dropdown
+      const statusSelectHtml = `
+        <span class="status-badge ${badgeClass}">${badgeText}</span>
+        <select class="order-status-select" onchange="changeOrderStatus('${docId}', this.value)" title="Ubah status pesanan">
+          <option value="" disabled selected>Ubah Status...</option>
+          <option value="pending" ${status === 'pending' || status === 'menunggu_verifikasi' ? 'disabled' : ''}>Menunggu Verifikasi</option>
+          <option value="confirmed" ${status === 'confirmed' || status === 'pembayaran_dikonfirmasi' ? 'disabled' : ''}>Dikonfirmasi</option>
+          <option value="processing" ${status === 'processing' ? 'disabled' : ''}>Sedang Diproduksi</option>
+          <option value="shipped" ${status === 'shipped' ? 'disabled' : ''}>Pesanan Dikirim</option>
+          <option value="completed" ${status === 'completed' ? 'disabled' : ''}>Pesanan Selesai</option>
+          <option value="rejected" ${status === 'rejected' || status === 'pembayaran_ditolak' ? 'disabled' : ''}>Ditolak</option>
+        </select>
+      `;
 
       // Action Buttons
       let actionButtonsHtml = ``;
@@ -345,6 +393,12 @@ async function loadOrders() {
         actionButtonsHtml = `<span style="color: #198754; font-size: 12px; font-weight: 600;"><i class="bx bx-check-double"></i> Terverifikasi</span>`;
       } else if (status === "rejected" || status === "pembayaran_ditolak") {
         actionButtonsHtml = `<span style="color: #dc3545; font-size: 12px; font-weight: 600;"><i class="bx bx-x-circle"></i> Ditolak</span>`;
+      } else if (status === "shipped") {
+        actionButtonsHtml = `<span style="color: #6d28d9; font-size: 12px; font-weight: 600;"><i class="bx bx-trip"></i> Sedang Dikirim</span>`;
+      } else if (status === "completed") {
+        actionButtonsHtml = `<span style="color: #15803d; font-size: 12px; font-weight: 600;"><i class="bx bx-check-double"></i> Selesai</span>`;
+      } else {
+        actionButtonsHtml = `<span style="color: #0369a1; font-size: 12px; font-weight: 600;"><i class="bx bx-time"></i> Diproses</span>`;
       }
 
       const row = document.createElement("tr");
@@ -364,7 +418,8 @@ async function loadOrders() {
         </td>
         <td><strong style="color:#111;">Rp ${totalPrice.toLocaleString("id-ID")}</strong></td>
         <td>${proofHtml}</td>
-        <td><span class="status-badge ${badgeClass}">${badgeText}</span></td>
+        <td>${statusSelectHtml}</td>
+        <td>${resiHtml}</td>
         <td>${actionButtonsHtml}</td>
       `;
 
@@ -377,7 +432,7 @@ async function loadOrders() {
     console.error("Gagal mengambil pesanan:", error);
     orderTableBody.innerHTML = `
       <tr>
-        <td colspan="9" style="text-align:center; padding:50px 20px; color:#888;">
+        <td colspan="10" style="text-align:center; padding:50px 20px; color:#888;">
           Gagal mengambil data pesanan.
         </td>
       </tr>
@@ -389,7 +444,7 @@ async function loadOrders() {
 window.confirmOrderPayment = async function(orderId) {
   if (!confirm("Konfirmasi bahwa pembayaran untuk pesanan ini telah DITERIMA?")) return;
   try {
-    await updateDoc(doc(db, "orders", orderId), { status: "confirmed" });
+    await updateDoc(doc(db, "orders", orderId), { status: "confirmed", updatedAt: serverTimestamp() });
     alert("Pembayaran berhasil dikonfirmasi! Pesanan lanjut diproses 🎉");
     loadOrders();
   } catch (err) {
@@ -401,12 +456,42 @@ window.confirmOrderPayment = async function(orderId) {
 window.rejectOrderPayment = async function(orderId) {
   if (!confirm("Apakah Anda yakin ingin MENOLAK bukti transfer pesanan ini?")) return;
   try {
-    await updateDoc(doc(db, "orders", orderId), { status: "rejected" });
+    await updateDoc(doc(db, "orders", orderId), { status: "rejected", updatedAt: serverTimestamp() });
     alert("Pembayaran ditolak.");
     loadOrders();
   } catch (err) {
     console.error("Gagal menolak pembayaran:", err);
     alert("Gagal menolak pembayaran. Silakan coba lagi.");
+  }
+};
+
+window.changeOrderStatus = async function(orderId, newStatus) {
+  if (!newStatus) return;
+  const labels = {
+    pending: "Menunggu Verifikasi",
+    confirmed: "Dikonfirmasi",
+    processing: "Sedang Diproduksi",
+    shipped: "Pesanan Dikirim",
+    completed: "Pesanan Selesai",
+    rejected: "Ditolak"
+  };
+  const labelText = labels[newStatus] || newStatus;
+  if (!confirm(`Ubah status pesanan #${orderId.substring(0, 8).toUpperCase()} menjadi "${labelText}"?`)) {
+    loadOrders();
+    return;
+  }
+  try {
+    const updateData = { status: newStatus, updatedAt: serverTimestamp() };
+    if (newStatus === "shipped") {
+      updateData.shippedAt = serverTimestamp();
+    }
+    await updateDoc(doc(db, "orders", orderId), updateData);
+    alert(`Status pesanan berhasil diubah menjadi "${labelText}"! 🎉`);
+    loadOrders();
+  } catch (err) {
+    console.error("Gagal update status:", err);
+    alert("Gagal mengubah status pesanan. Silakan coba lagi.");
+    loadOrders();
   }
 };
 
@@ -439,6 +524,210 @@ const closeProofModalBtn = document.getElementById("closeProofModalBtn");
 if (closeProofModalBtn) {
   closeProofModalBtn.addEventListener("click", () => {
     document.getElementById("paymentProofModal").classList.remove("show");
+  });
+}
+
+// =====================================================
+// TRACKING & RESI PENGIRIMAN MANAGEMENT
+// =====================================================
+
+window.openTrackingModal = function(orderId) {
+  const order = window.ordersCache[orderId];
+  if (!order) {
+    alert("Data pesanan tidak ditemukan.");
+    return;
+  }
+
+  const modal = document.getElementById("trackingAdminModal");
+  const modalTitle = document.getElementById("trackingModalTitle");
+  const orderIdInput = document.getElementById("trackingOrderId");
+  const displayIdElem = document.getElementById("trackingOrderDisplayId");
+  const customerNameElem = document.getElementById("trackingCustomerName");
+  const destinationElem = document.getElementById("trackingDestination");
+  const courierSelect = document.getElementById("trackingCourierSelect");
+  const customCourierGroup = document.getElementById("trackingCustomCourierGroup");
+  const customCourierInput = document.getElementById("trackingCustomCourierInput");
+  const numberInput = document.getElementById("trackingNumberInput");
+  const noteInput = document.getElementById("trackingNoteInput");
+  const autoShippedCheck = document.getElementById("trackingAutoShippedCheck");
+  const deleteBtn = document.getElementById("trackingDeleteBtn");
+
+  if (!modal) return;
+
+  orderIdInput.value = orderId;
+  displayIdElem.textContent = `#${order.displayId || orderId.substring(0, 8).toUpperCase()}`;
+  customerNameElem.textContent = `${order.customerName || "-"} (${order.phone || "-"})`;
+  destinationElem.textContent = `${order.shippingRegion || "Standard"} - Rp ${Number(order.shippingFee || 0).toLocaleString("id-ID")}`;
+
+  const hasTracking = Boolean(order.trackingNumber);
+  modalTitle.innerHTML = hasTracking 
+    ? `<i class="bx bx-edit" style="color: #111;"></i> Edit Resi Pengiriman`
+    : `<i class="bx bx-package" style="color: #111;"></i> Input Resi Pengiriman`;
+
+  const standardCouriers = [
+    "J&T Express", "JNE Express", "SiCepat Ekspres", "SPX Express (Shopee Xpress)",
+    "Anteraja", "ID Express", "Ninja Xpress", "TIKI", "Pos Indonesia",
+    "Wahana Express", "Lion Parcel"
+  ];
+
+  if (order.courier) {
+    if (standardCouriers.includes(order.courier)) {
+      courierSelect.value = order.courier;
+      customCourierGroup.style.display = "none";
+      customCourierInput.required = false;
+      customCourierInput.value = "";
+    } else {
+      courierSelect.value = "Lainnya";
+      customCourierGroup.style.display = "block";
+      customCourierInput.required = true;
+      customCourierInput.value = order.courier;
+    }
+  } else {
+    courierSelect.value = "";
+    customCourierGroup.style.display = "none";
+    customCourierInput.required = false;
+    customCourierInput.value = "";
+  }
+
+  numberInput.value = order.trackingNumber || "";
+  noteInput.value = order.trackingNote || "";
+  autoShippedCheck.checked = (order.status !== "completed");
+
+  if (hasTracking) {
+    deleteBtn.style.display = "inline-flex";
+  } else {
+    deleteBtn.style.display = "none";
+  }
+
+  modal.classList.add("show");
+  setTimeout(() => numberInput.focus(), 100);
+};
+
+// Courier Select change handler
+const trackingCourierSelect = document.getElementById("trackingCourierSelect");
+if (trackingCourierSelect) {
+  trackingCourierSelect.addEventListener("change", (e) => {
+    const customGroup = document.getElementById("trackingCustomCourierGroup");
+    const customInput = document.getElementById("trackingCustomCourierInput");
+    if (e.target.value === "Lainnya") {
+      customGroup.style.display = "block";
+      customInput.required = true;
+      customInput.focus();
+    } else {
+      customGroup.style.display = "none";
+      customInput.required = false;
+      customInput.value = "";
+    }
+  });
+}
+
+// Close tracking modal
+const closeTrackingModalBtn = document.getElementById("closeTrackingModalBtn");
+const cancelTrackingBtn = document.getElementById("cancelTrackingBtn");
+const trackingAdminModal = document.getElementById("trackingAdminModal");
+
+function closeTrackingModal() {
+  if (trackingAdminModal) {
+    trackingAdminModal.classList.remove("show");
+  }
+}
+if (closeTrackingModalBtn) closeTrackingModalBtn.addEventListener("click", closeTrackingModal);
+if (cancelTrackingBtn) cancelTrackingBtn.addEventListener("click", closeTrackingModal);
+
+// Tracking form submit handler
+const trackingForm = document.getElementById("trackingForm");
+if (trackingForm) {
+  trackingForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const orderId = document.getElementById("trackingOrderId").value;
+    const courierSelect = document.getElementById("trackingCourierSelect");
+    const customInput = document.getElementById("trackingCustomCourierInput");
+    const numberInput = document.getElementById("trackingNumberInput");
+    const noteInput = document.getElementById("trackingNoteInput");
+    const autoShippedCheck = document.getElementById("trackingAutoShippedCheck");
+    const submitBtn = document.getElementById("saveTrackingSubmitBtn");
+
+    if (!orderId) {
+      alert("ID Pesanan tidak valid.");
+      return;
+    }
+
+    const courier = courierSelect.value === "Lainnya" 
+      ? (customInput.value.trim() || "Ekspedisi Lainnya")
+      : courierSelect.value;
+    const trackingNumber = numberInput.value.trim().toUpperCase();
+    const trackingNote = noteInput.value.trim();
+
+    if (!courier) {
+      alert("Silakan pilih atau ketik nama ekspedisi!");
+      courierSelect.focus();
+      return;
+    }
+
+    if (!trackingNumber) {
+      alert("Silakan masukkan nomor resi pengiriman!");
+      numberInput.focus();
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<i class="bx bx-loader-alt bx-spin"></i> Menyimpan...`;
+
+    try {
+      const updateData = {
+        courier,
+        trackingNumber,
+        trackingNote,
+        updatedAt: serverTimestamp()
+      };
+
+      if (autoShippedCheck.checked) {
+        updateData.status = "shipped";
+        updateData.shippedAt = serverTimestamp();
+      }
+
+      await updateDoc(doc(db, "orders", orderId), updateData);
+
+      closeTrackingModal();
+      alert(`Nomor resi ${trackingNumber} (${courier}) berhasil disimpan! 🎉\nPelanggan sekarang dapat melacak dan melihat resi ini di halaman Progress Order.`);
+      loadOrders();
+    } catch (err) {
+      console.error("Gagal menyimpan resi:", err);
+      alert("Gagal menyimpan nomor resi: " + err.message);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<i class="bx bx-save"></i> Simpan Resi`;
+    }
+  });
+}
+
+// Delete tracking button
+const trackingDeleteBtn = document.getElementById("trackingDeleteBtn");
+if (trackingDeleteBtn) {
+  trackingDeleteBtn.addEventListener("click", async () => {
+    const orderId = document.getElementById("trackingOrderId").value;
+    if (!orderId) return;
+
+    if (!confirm("Apakah Anda yakin ingin MENGHAPUS nomor resi dari pesanan ini?")) {
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, "orders", orderId), {
+        courier: "",
+        trackingNumber: "",
+        trackingNote: "",
+        updatedAt: serverTimestamp()
+      });
+
+      closeTrackingModal();
+      alert("Nomor resi berhasil dihapus dari pesanan ini.");
+      loadOrders();
+    } catch (err) {
+      console.error("Gagal menghapus resi:", err);
+      alert("Gagal menghapus nomor resi: " + err.message);
+    }
   });
 }
 
