@@ -85,33 +85,90 @@
 
       text-align: center;
 
-      margin-bottom: 35px;
+      margin-bottom: 30px;
 
     }
 
 
-    .login-logo img {
+    .login-logo-emblem {
 
-      width: 105px;
+      width: 72px;
 
-      height: auto;
+      height: 72px;
+
+      background: #111111;
+
+      border-radius: 20px;
+
+      margin: 0 auto 14px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+      border: 1px solid rgba(255, 255, 255, 0.1);
+
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    }
+
+
+    .login-logo-emblem:hover {
+
+      transform: translateY(-2px);
+
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+
+    }
+
+
+    .login-logo-emblem img {
+
+      width: 38px;
+
+      height: 50px;
 
       object-fit: contain;
 
-      filter: brightness(0);
+      filter: none;
+
+      image-rendering: -webkit-optimize-contrast;
+
+    }
+
+
+    .login-logo h2 {
+
+      margin: 0;
+
+      font-size: 20px;
+
+      font-weight: 800;
+
+      letter-spacing: 4px;
+
+      color: #111111;
+
+      line-height: 1.2;
 
     }
 
 
     .login-logo p {
 
-      margin-top: 15px;
+      margin: 4px 0 0;
 
       font-size: 11px;
 
-      letter-spacing: 4px;
+      letter-spacing: 3px;
 
-      color: #777;
+      color: #888888;
+
+      font-weight: 600;
 
       text-transform: uppercase;
 
@@ -418,17 +475,23 @@
   <main class="login-container">
 
 
-    <!-- LOGO -->
+    <!-- LOGO EMBLEM -->
 
     <div class="login-logo">
 
-      <img
-        src="../logo.PNG"
-        alt="USKUT Logo"
-      >
+      <div class="login-logo-emblem">
+
+        <img
+          src="../logo.PNG"
+          alt="USKUT Logo"
+        >
+
+      </div>
+
+      <h2>USKUT</h2>
 
       <p>
-        Admin Panel
+        ADMIN PANEL
       </p>
 
     </div>
