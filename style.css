@@ -1209,13 +1209,41 @@ footer a:hover {
   text-decoration: underline;
 }
 
+.container-drop {
+  padding-top: 130px;
+  padding-bottom: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .container-drop h1 {
   padding-left: 20px;
-  padding-top: 50px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
 }
 
 .container-drop p{
   padding-left: 20px;
+  color: #666;
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .container-drop {
+    padding-top: 120px;
+    padding-bottom: 10px;
+  }
+  .container-drop h1 {
+    font-size: 1.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container-drop {
+    padding-top: 110px;
+  }
 }
 
 .container-how h1 {
@@ -2139,7 +2167,7 @@ footer a:hover {
 
   margin: 0 auto;
 
-  padding: 100px 20px 120px;
+  padding: 135px 20px 120px;
 
 }
 
@@ -2838,7 +2866,7 @@ footer a:hover {
   .progress-section {
 
     padding:
-      70px 15px 90px;
+      125px 15px 90px;
 
   }
 
