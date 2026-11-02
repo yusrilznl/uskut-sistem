@@ -149,7 +149,10 @@ body{
 ===================================================== */
 
 .hero-lookbook-section {
-  padding: 50px 0 40px;
+  padding-top: 135px;
+  padding-bottom: 50px;
+  padding-left: 0;
+  padding-right: 0;
   background: #000000;
   color: #fff;
   overflow: hidden;
@@ -389,7 +392,8 @@ body{
 /* RESPONSIVE BREAKPOINTS */
 @media (max-width: 768px) {
   .hero-lookbook-section {
-    padding: 35px 0 25px;
+    padding-top: 115px;
+    padding-bottom: 35px;
   }
   .hero-headline {
     font-size: 2.2rem;
@@ -417,6 +421,10 @@ body{
 }
 
 @media (max-width: 480px) {
+  .hero-lookbook-section {
+    padding-top: 105px;
+    padding-bottom: 25px;
+  }
   .hero-headline {
     font-size: 1.75rem;
   }
