@@ -1062,7 +1062,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateTotal();
   }
 
-  // Setup Payment Proof File Upload Listener
+  // Setup Payment Proof File Upload Listener (with automatic canvas compression to ~50KB)
   function setupPaymentProofListener() {
     const proofInput = document.getElementById("paymentProofInput");
     const previewBox = document.getElementById("paymentProofPreviewBox");
@@ -1074,9 +1074,34 @@ document.addEventListener("DOMContentLoaded", function () {
         if (file) {
           const reader = new FileReader();
           reader.onload = (evt) => {
-            selectedPaymentProofData = evt.target.result;
-            if (previewImg) previewImg.src = selectedPaymentProofData;
-            if (previewBox) previewBox.style.display = "block";
+            const rawData = evt.target.result;
+            const img = new Image();
+            img.onload = () => {
+              let width = img.width;
+              let height = img.height;
+              const maxDim = 900;
+              if (width > height && width > maxDim) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              } else if (height > maxDim) {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+              const canvas = document.createElement("canvas");
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext("2d");
+              ctx.drawImage(img, 0, 0, width, height);
+              selectedPaymentProofData = canvas.toDataURL("image/jpeg", 0.75);
+              if (previewImg) previewImg.src = selectedPaymentProofData;
+              if (previewBox) previewBox.style.display = "block";
+            };
+            img.onerror = () => {
+              selectedPaymentProofData = rawData;
+              if (previewImg) previewImg.src = selectedPaymentProofData;
+              if (previewBox) previewBox.style.display = "block";
+            };
+            img.src = rawData;
           };
           reader.readAsDataURL(file);
         }

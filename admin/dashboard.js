@@ -1238,6 +1238,61 @@ async function loadProductsAdmin() {
   }
 }
 
+// Image Compression Helper via Canvas (Resizes to max 800x800 and compresses to JPEG ~40-80KB)
+function compressImage(source, maxWidth = 800, maxHeight = 800, quality = 0.75) {
+  if (!source) return Promise.resolve("");
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+
+    img.onload = () => {
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width = Math.round((width * maxHeight) / height);
+          height = maxHeight;
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Output as compressed JPEG
+      const compressedDataUrl = canvas.toDataURL("image/jpeg", quality);
+      resolve(compressedDataUrl);
+    };
+
+    img.onerror = () => {
+      // If error or already a remote URL, return original
+      resolve(typeof source === "string" ? source : "");
+    };
+
+    if (source instanceof File || source instanceof Blob) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(source);
+    } else if (typeof source === "string") {
+      img.src = source;
+    } else {
+      resolve("");
+    }
+  });
+}
+
 // Image File Picker Setup Helper
 function setupImageUploader(fileInputId, textInputId, previewBoxId, previewImgId, removeBtnId) {
   const fileInput = document.getElementById(fileInputId);
@@ -1247,17 +1302,32 @@ function setupImageUploader(fileInputId, textInputId, previewBoxId, previewImgId
   const removeBtn = document.getElementById(removeBtnId);
 
   if (fileInput) {
-    fileInput.addEventListener("change", (e) => {
+    fileInput.addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          const base64Data = evt.target.result;
-          textInput.value = base64Data;
-          previewImg.src = base64Data;
-          previewBox.style.display = "inline-block";
-        };
-        reader.readAsDataURL(file);
+        try {
+          if (previewBox) {
+            previewBox.style.display = "inline-block";
+          }
+          if (previewImg) {
+            previewImg.alt = "Mengompresi foto...";
+          }
+          const compressedBase64 = await compressImage(file, 800, 800, 0.75);
+          if (textInput) textInput.value = compressedBase64;
+          if (previewImg) {
+            previewImg.src = compressedBase64;
+            previewImg.alt = "Preview";
+          }
+        } catch (err) {
+          console.error("Gagal mengompresi gambar:", err);
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            const base64Data = evt.target.result;
+            if (textInput) textInput.value = base64Data;
+            if (previewImg) previewImg.src = base64Data;
+          };
+          reader.readAsDataURL(file);
+        }
       }
     });
   }
@@ -1370,15 +1440,26 @@ if (productForm) {
     const price = Number(document.getElementById("adminProductPrice").value);
     const status = document.getElementById("adminProductStatus").value;
     const description = document.getElementById("adminProductDesc").value.trim();
-    const image1 = document.getElementById("adminProductImage1").value.trim();
-    const image2 = document.getElementById("adminProductImage2").value.trim();
-    const image3 = document.getElementById("adminProductImage3").value.trim();
+    let image1 = document.getElementById("adminProductImage1").value.trim();
+    let image2 = document.getElementById("adminProductImage2").value.trim();
+    let image3 = document.getElementById("adminProductImage3").value.trim();
 
     const submitBtn = document.getElementById("saveProductSubmitBtn");
     submitBtn.disabled = true;
-    submitBtn.textContent = "Menyimpan...";
+    submitBtn.textContent = "Mengompresi & Menyimpan...";
 
     try {
+      // Auto compress any oversized base64 images before saving to Firestore
+      if (image1 && image1.startsWith("data:image/") && image1.length > 80000) {
+        image1 = await compressImage(image1, 800, 800, 0.75);
+      }
+      if (image2 && image2.startsWith("data:image/") && image2.length > 80000) {
+        image2 = await compressImage(image2, 800, 800, 0.75);
+      }
+      if (image3 && image3.startsWith("data:image/") && image3.length > 80000) {
+        image3 = await compressImage(image3, 800, 800, 0.75);
+      }
+
       const productPayload = {
         name,
         price,
@@ -1402,7 +1483,13 @@ if (productForm) {
       loadProductsAdmin();
     } catch (error) {
       console.error("Gagal menyimpan produk:", error);
-      alert("Gagal menyimpan produk. Silakan coba lagi.");
+      let errorDetail = error && error.message ? error.message : "Terjadi kesalahan tidak terduga.";
+      if (errorDetail.includes("exceeds the maximum") || errorDetail.includes("too large") || errorDetail.includes("1048576")) {
+        errorDetail = "Ukuran total gambar melebihi batas 1MB Firestore. Sistem telah mengaktifkan kompresi, silakan pilih ulang foto atau gunakan resolusi lebih kecil.";
+      } else if (errorDetail.includes("permission-denied") || errorDetail.includes("Missing or insufficient permissions")) {
+        errorDetail = "Izin database ditolak (Firestore security rules). Pastikan Anda sudah login akun Admin.";
+      }
+      alert(`Gagal menyimpan produk: ${errorDetail}`);
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = "Simpan Produk";
