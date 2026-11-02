@@ -78,6 +78,49 @@ const bankBcaInput = document.getElementById("bankBcaInput");
 const bankMandiriInput = document.getElementById("bankMandiriInput");
 const saveStoreSettingsBtn = document.getElementById("saveStoreSettingsBtn");
 
+// HAMBURGER MENU & MOBILE SIDEBAR DRAWER
+const adminHamburgerBtn = document.getElementById("adminHamburgerBtn");
+const adminSidebar = document.getElementById("adminSidebar");
+const adminSidebarOverlay = document.getElementById("adminSidebarOverlay");
+const adminSidebarClose = document.getElementById("adminSidebarClose");
+const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
+
+function openMobileSidebar() {
+  if (adminSidebar) adminSidebar.classList.add("show");
+  if (adminSidebarOverlay) adminSidebarOverlay.classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+
+function closeMobileSidebar() {
+  if (adminSidebar) adminSidebar.classList.remove("show");
+  if (adminSidebarOverlay) adminSidebarOverlay.classList.remove("show");
+  document.body.style.overflow = "";
+}
+
+if (adminHamburgerBtn) {
+  adminHamburgerBtn.addEventListener("click", openMobileSidebar);
+}
+
+if (adminSidebarClose) {
+  adminSidebarClose.addEventListener("click", closeMobileSidebar);
+}
+
+if (adminSidebarOverlay) {
+  adminSidebarOverlay.addEventListener("click", closeMobileSidebar);
+}
+
+if (mobileLogoutBtn) {
+  mobileLogoutBtn.addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+      window.location.href = "login.html";
+    } catch (error) {
+      console.error("Gagal logout:", error);
+      alert("Gagal logout. Silakan coba lagi.");
+    }
+  });
+}
+
 // TAB SWITCHING NAVIGATION
 if (tabOrders && tabProducts && tabShipping) {
   tabOrders.addEventListener("click", (e) => {
@@ -91,6 +134,7 @@ if (tabOrders && tabProducts && tabShipping) {
     if (sectionShipping) sectionShipping.style.display = "none";
     if (sectionStoreSettings) sectionStoreSettings.style.display = "none";
     if (pageTitle) pageTitle.textContent = "Dashboard Pesanan";
+    closeMobileSidebar();
   });
 
   tabProducts.addEventListener("click", (e) => {
@@ -104,6 +148,7 @@ if (tabOrders && tabProducts && tabShipping) {
     if (sectionShipping) sectionShipping.style.display = "none";
     if (sectionStoreSettings) sectionStoreSettings.style.display = "none";
     if (pageTitle) pageTitle.textContent = "Kelola Produk";
+    closeMobileSidebar();
     loadProductsAdmin();
   });
 
@@ -118,6 +163,7 @@ if (tabOrders && tabProducts && tabShipping) {
     if (sectionProducts) sectionProducts.style.display = "none";
     if (sectionStoreSettings) sectionStoreSettings.style.display = "none";
     if (pageTitle) pageTitle.textContent = "Pengaturan Ongkir";
+    closeMobileSidebar();
     loadShippingRatesAdmin();
   });
 
@@ -133,6 +179,7 @@ if (tabOrders && tabProducts && tabShipping) {
       if (sectionProducts) sectionProducts.style.display = "none";
       if (sectionShipping) sectionShipping.style.display = "none";
       if (pageTitle) pageTitle.textContent = "Pengaturan Toko & Pre-Order";
+      closeMobileSidebar();
       loadStoreSettingsAdmin();
     });
   }
