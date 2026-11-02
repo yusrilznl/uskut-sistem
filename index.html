@@ -8,7 +8,7 @@
   <title>uskut</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 
   <!-- GOOGLE FONT -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,30 +78,115 @@
 
 
 <!-- =====================================================
-     HERO
+     HERO LOOKBOOK REEL (DUAL-SPEED INFINITE SLIDER)
 ===================================================== -->
 
-<section class="hero container">
+<section class="hero-lookbook-section">
 
-  <div class="hero-text">
+  <!-- HERO HEADER & CTA -->
+  <div class="hero-content">
 
-    <h1>
-      OPEN PRE-ORDER KOLEKSI TERBARU
+    <div class="hero-badge-pill">
+      <span class="hero-pulse-dot"></span>
+      <span>USKUT LOOKBOOK ARCHIVE</span>
+    </div>
+
+    <h1 class="hero-headline">
+      OPEN PRE-ORDER<br>KOLEKSI TERBARU
     </h1>
 
-    <p>
-      Lebih eksklusif, lebih terkontrol, dan berkualitas.
+    <p class="hero-lead">
+      Lebih eksklusif, lebih terkontrol, dan berkualitas tinggi.
     </p>
 
-    <a href="drop.html">
-      <button>
-        Lihat Koleksi PO
-      </button>
-    </a>
+    <div class="hero-cta-group">
+      <a href="drop.html" class="hero-btn primary">
+        <i class="bx bx-shopping-bag"></i> Lihat Koleksi PO
+      </a>
+      <a href="progress.html" class="hero-btn secondary">
+        <i class="bx bx-package"></i> Track Pesanan
+      </a>
+    </div>
+
+  </div>
+
+
+  <!-- DUAL REEL SLIDER (INFINITE AUTO-SCROLL) -->
+  <div class="lookbook-reels">
+
+    <!-- ROW 1: PORTRAIT LOOKS (SLIDE 1 - 10) -->
+    <div class="reel-row">
+      <div class="reel-track track-portrait">
+        <!-- Original 10 Portrait Slides -->
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-1.jpg')"><img src="hero-slides/slide-1.jpg" alt="USKUT Look 1" loading="lazy"></div>
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-2.jpg')"><img src="hero-slides/slide-2.jpg" alt="USKUT Look 2" loading="lazy"></div>
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-3.jpg')"><img src="hero-slides/slide-3.jpg" alt="USKUT Look 3" loading="lazy"></div>
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-4.jpg')"><img src="hero-slides/slide-4.jpg" alt="USKUT Look 4" loading="lazy"></div>
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-5.jpg')"><img src="hero-slides/slide-5.jpg" alt="USKUT Look 5" loading="lazy"></div>
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-6.jpg')"><img src="hero-slides/slide-6.jpg" alt="USKUT Look 6" loading="lazy"></div>
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-7.jpg')"><img src="hero-slides/slide-7.jpg" alt="USKUT Look 7" loading="lazy"></div>
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-8.jpg')"><img src="hero-slides/slide-8.jpg" alt="USKUT Look 8" loading="lazy"></div>
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-9.jpg')"><img src="hero-slides/slide-9.jpg" alt="USKUT Look 9" loading="lazy"></div>
+        <div class="reel-item portrait" onclick="openLookbookModal('hero-slides/slide-10.jpg')"><img src="hero-slides/slide-10.jpg" alt="USKUT Look 10" loading="lazy"></div>
+
+        <!-- Duplicated 10 Portrait Slides for seamless infinite loop -->
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-1.jpg')"><img src="hero-slides/slide-1.jpg" alt="USKUT Look 1" loading="lazy"></div>
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-2.jpg')"><img src="hero-slides/slide-2.jpg" alt="USKUT Look 2" loading="lazy"></div>
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-3.jpg')"><img src="hero-slides/slide-3.jpg" alt="USKUT Look 3" loading="lazy"></div>
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-4.jpg')"><img src="hero-slides/slide-4.jpg" alt="USKUT Look 4" loading="lazy"></div>
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-5.jpg')"><img src="hero-slides/slide-5.jpg" alt="USKUT Look 5" loading="lazy"></div>
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-6.jpg')"><img src="hero-slides/slide-6.jpg" alt="USKUT Look 6" loading="lazy"></div>
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-7.jpg')"><img src="hero-slides/slide-7.jpg" alt="USKUT Look 7" loading="lazy"></div>
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-8.jpg')"><img src="hero-slides/slide-8.jpg" alt="USKUT Look 8" loading="lazy"></div>
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-9.jpg')"><img src="hero-slides/slide-9.jpg" alt="USKUT Look 9" loading="lazy"></div>
+        <div class="reel-item portrait" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-10.jpg')"><img src="hero-slides/slide-10.jpg" alt="USKUT Look 10" loading="lazy"></div>
+      </div>
+    </div>
+
+
+    <!-- ROW 2: LANDSCAPE DETAILS (SLIDE 11 - 22) -->
+    <div class="reel-row">
+      <div class="reel-track track-landscape">
+        <!-- Original 12 Landscape Slides -->
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-11.jpg')"><img src="hero-slides/slide-11.jpg" alt="USKUT Detail 11" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-12.jpg')"><img src="hero-slides/slide-12.jpg" alt="USKUT Detail 12" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-13.jpg')"><img src="hero-slides/slide-13.jpg" alt="USKUT Detail 13" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-14.jpg')"><img src="hero-slides/slide-14.jpg" alt="USKUT Detail 14" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-15.jpg')"><img src="hero-slides/slide-15.jpg" alt="USKUT Detail 15" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-16.jpg')"><img src="hero-slides/slide-16.jpg" alt="USKUT Detail 16" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-17.jpg')"><img src="hero-slides/slide-17.jpg" alt="USKUT Detail 17" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-18.jpg')"><img src="hero-slides/slide-18.jpg" alt="USKUT Detail 18" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-19.jpg')"><img src="hero-slides/slide-19.jpg" alt="USKUT Detail 19" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-20.jpg')"><img src="hero-slides/slide-20.jpg" alt="USKUT Detail 20" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-21.jpg')"><img src="hero-slides/slide-21.jpg" alt="USKUT Detail 21" loading="lazy"></div>
+        <div class="reel-item landscape" onclick="openLookbookModal('hero-slides/slide-22.jpg')"><img src="hero-slides/slide-22.jpg" alt="USKUT Detail 22" loading="lazy"></div>
+
+        <!-- Duplicated 12 Landscape Slides for seamless infinite loop -->
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-11.jpg')"><img src="hero-slides/slide-11.jpg" alt="USKUT Detail 11" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-12.jpg')"><img src="hero-slides/slide-12.jpg" alt="USKUT Detail 12" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-13.jpg')"><img src="hero-slides/slide-13.jpg" alt="USKUT Detail 13" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-14.jpg')"><img src="hero-slides/slide-14.jpg" alt="USKUT Detail 14" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-15.jpg')"><img src="hero-slides/slide-15.jpg" alt="USKUT Detail 15" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-16.jpg')"><img src="hero-slides/slide-16.jpg" alt="USKUT Detail 16" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-17.jpg')"><img src="hero-slides/slide-17.jpg" alt="USKUT Detail 17" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-18.jpg')"><img src="hero-slides/slide-18.jpg" alt="USKUT Detail 18" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-19.jpg')"><img src="hero-slides/slide-19.jpg" alt="USKUT Detail 19" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-20.jpg')"><img src="hero-slides/slide-20.jpg" alt="USKUT Detail 20" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-21.jpg')"><img src="hero-slides/slide-21.jpg" alt="USKUT Detail 21" loading="lazy"></div>
+        <div class="reel-item landscape" aria-hidden="true" onclick="openLookbookModal('hero-slides/slide-22.jpg')"><img src="hero-slides/slide-22.jpg" alt="USKUT Detail 22" loading="lazy"></div>
+      </div>
+    </div>
 
   </div>
 
 </section>
+
+
+<!-- LOOKBOOK LIGHTBOX MODAL -->
+<div class="lookbook-modal" id="lookbookModal" onclick="this.classList.remove('show')">
+  <span class="close-lookbook" onclick="document.getElementById('lookbookModal').classList.remove('show')">&times;</span>
+  <img id="lookbookModalImg" src="" alt="Lookbook Zoom" onclick="event.stopPropagation()">
+</div>
 
 
 
@@ -480,10 +565,29 @@
 ></script>
 
 
-<!-- FEATHER ICON INITIALIZATION -->
+<!-- FEATHER ICON INITIALIZATION & LOOKBOOK MODAL -->
 
 <script>
   feather.replace();
+
+  function openLookbookModal(src) {
+    const modal = document.getElementById("lookbookModal");
+    const img = document.getElementById("lookbookModalImg");
+    if (modal && img) {
+      img.src = src;
+      modal.classList.add("show");
+    }
+  }
+
+  // Esc key to close lookbook
+  window.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      const modal = document.getElementById("lookbookModal");
+      if (modal && modal.classList.contains("show")) {
+        modal.classList.remove("show");
+      }
+    }
+  });
 </script>
 
 
