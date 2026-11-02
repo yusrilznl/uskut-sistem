@@ -957,14 +957,55 @@ document.addEventListener("DOMContentLoaded", function () {
       };
     }
 
+    // Status check
+    const prodStatus = button.dataset.status || (window.selectedProduct ? window.selectedProduct.status : "open");
+    const isClosed = (prodStatus === "closed" || prodStatus === "Closed" || prodStatus === "tutup");
+
+    const modalStatus = document.getElementById("modalStatus");
+    if (modalStatus) {
+      if (isClosed) {
+        modalStatus.textContent = "CLOSED";
+        modalStatus.classList.add("closed");
+      } else {
+        modalStatus.textContent = "OPEN PRE-ORDER";
+        modalStatus.classList.remove("closed");
+      }
+    }
+
+    const preorderBtn = document.getElementById("preorderBtn");
+    if (preorderBtn) {
+      if (isClosed) {
+        preorderBtn.disabled = true;
+        preorderBtn.textContent = "Pre-Order Ditutup (Closed)";
+        preorderBtn.classList.add("disabled");
+        preorderBtn.style.background = "#555";
+        preorderBtn.style.cursor = "not-allowed";
+        preorderBtn.style.opacity = "0.6";
+        preorderBtn.style.pointerEvents = "none";
+      } else {
+        preorderBtn.disabled = false;
+        preorderBtn.textContent = "Pre-Order Sekarang";
+        preorderBtn.classList.remove("disabled");
+        preorderBtn.style.background = "#111";
+        preorderBtn.style.cursor = "pointer";
+        preorderBtn.style.opacity = "1";
+        preorderBtn.style.pointerEvents = "auto";
+      }
+    }
 
     selectedSize = "";
-
 
     document
       .querySelectorAll(".size-btn")
       .forEach(btn => {
         btn.classList.remove("active");
+        if (isClosed) {
+          btn.disabled = true;
+          btn.classList.add("disabled");
+        } else {
+          btn.disabled = false;
+          btn.classList.remove("disabled");
+        }
       });
 
   }
@@ -1024,6 +1065,7 @@ document.addEventListener("DOMContentLoaded", function () {
       e.target.closest(".size-btn");
 
     if (!btn) return;
+    if (btn.disabled || btn.classList.contains("disabled")) return;
 
     document
       .querySelectorAll(".size-btn")
@@ -1035,6 +1077,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     selectedSize =
       btn.innerText.trim();
+    window.selectedSize = selectedSize;
 
   });
 
@@ -1149,6 +1192,21 @@ document.addEventListener("DOMContentLoaded", function () {
   const preorderBtn = document.getElementById("preorderBtn");
   if (preorderBtn) {
     preorderBtn.addEventListener("click", function () {
+      const curProduct = window.selectedProduct;
+      const isClosed = (curProduct && (curProduct.status === "closed" || curProduct.status === "Closed" || curProduct.status === "tutup")) || preorderBtn.disabled || preorderBtn.classList.contains("disabled");
+      if (isClosed) {
+        alert("Mohon maaf, pre-order untuk produk ini sedang DITUTUP (CLOSED) dan tidak dapat dipesan.");
+        return;
+      }
+
+      if (window.selectedProduct && window.selectedProduct.name) {
+        selectedProduct = window.selectedProduct.name;
+        selectedPrice = Number(window.selectedProduct.price || 0);
+      }
+      if (window.selectedSize) {
+        selectedSize = window.selectedSize;
+      }
+
       if (selectedSize === "") {
         alert("Silakan pilih size terlebih dahulu.");
         return;

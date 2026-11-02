@@ -44,6 +44,16 @@ function getImagePath(image) {
   return `./${image}`;
 }
 
+function escapeHTML(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 
 /* =====================================================
    LOAD PRODUCTS
@@ -166,7 +176,7 @@ async function loadProducts() {
 
         <div class="product-info">
 
-          <p class="badge">
+          <p class="badge ${product.status === "closed" ? "closed" : ""}">
 
             ${
               product.status === "open"
@@ -180,7 +190,7 @@ async function loadProducts() {
           <div class="product-row">
 
             <h3>
-              ${product.name || "Unnamed Product"}
+              ${escapeHTML(product.name || "Unnamed Product")}
             </h3>
 
             <p class="price">
@@ -198,6 +208,13 @@ async function loadProducts() {
           <button
             class="view-btn"
             type="button"
+            data-name="${escapeHTML(product.name || '')}"
+            data-price="${Number(product.price || 0)}"
+            data-status="${escapeHTML(product.status || 'open')}"
+            data-image1="${escapeHTML(product.image1 || '')}"
+            data-image2="${escapeHTML(product.image2 || '')}"
+            data-image3="${escapeHTML(product.image3 || '')}"
+            data-desc="${escapeHTML(product.description || '')}"
           >
             <i class="bx bx-show"></i> Lihat Detail
           </button>
@@ -399,6 +416,45 @@ function openProductModal(product) {
 
 
   /* =================================================
+     STATUS PRODUK & TOMBOL PRE-ORDER
+  ================================================= */
+
+  const modalStatus = document.getElementById("modalStatus");
+  const preorderBtn = document.getElementById("preorderBtn");
+  const isClosed = (product.status === "closed" || product.status === "Closed" || product.status === "tutup");
+
+  if (modalStatus) {
+    if (isClosed) {
+      modalStatus.textContent = "CLOSED";
+      modalStatus.classList.add("closed");
+    } else {
+      modalStatus.textContent = "OPEN PRE-ORDER";
+      modalStatus.classList.remove("closed");
+    }
+  }
+
+  if (preorderBtn) {
+    if (isClosed) {
+      preorderBtn.disabled = true;
+      preorderBtn.textContent = "Pre-Order Ditutup (Closed)";
+      preorderBtn.classList.add("disabled");
+      preorderBtn.style.background = "#555";
+      preorderBtn.style.cursor = "not-allowed";
+      preorderBtn.style.opacity = "0.6";
+      preorderBtn.style.pointerEvents = "none";
+    } else {
+      preorderBtn.disabled = false;
+      preorderBtn.textContent = "Pre-Order Sekarang";
+      preorderBtn.classList.remove("disabled");
+      preorderBtn.style.background = "#111";
+      preorderBtn.style.cursor = "pointer";
+      preorderBtn.style.opacity = "1";
+      preorderBtn.style.pointerEvents = "auto";
+    }
+  }
+
+
+  /* =================================================
      SIMPAN PRODUK
   ================================================= */
 
@@ -410,7 +466,7 @@ function openProductModal(product) {
 
 
   /* =================================================
-     RESET SIZE
+     RESET SIZE & STATUS
   ================================================= */
 
   document
@@ -418,6 +474,14 @@ function openProductModal(product) {
     .forEach((button) => {
 
       button.classList.remove("active");
+
+      if (isClosed) {
+        button.disabled = true;
+        button.classList.add("disabled");
+      } else {
+        button.disabled = false;
+        button.classList.remove("disabled");
+      }
 
     });
 
@@ -516,6 +580,10 @@ const sizeButtons =
 sizeButtons.forEach((button) => {
 
   button.addEventListener("click", () => {
+
+    if (button.disabled || button.classList.contains("disabled")) {
+      return;
+    }
 
     sizeButtons.forEach((btn) => {
 
